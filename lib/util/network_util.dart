@@ -54,6 +54,21 @@ class NetworkUtil {
         headers);
   }
 
+  Future<dynamic> put(String url,
+      {Map<String, String> headers,
+        body,
+        encoding,
+        bool isAuthRequest = false,
+        timeout = DEFAULT_TIMEOUT}) async {
+    //url = replaceLocalUrl(url);
+    //Log.debug(text: "URL запроса: $url");
+    //Log.debug(text: "Тело запроса: $body");
+    return await _makeHttpCall(
+            (Map<String, String> actualHeaders) =>
+            _client.put(Uri.tryParse(url), body: body, headers: actualHeaders, encoding: encoding).timeout(timeout),
+        headers);
+  }
+
   Future<dynamic> _makeHttpCall(
       Future<http.Response> Function(Map<String, String> actualHeaders)
           httpCall,

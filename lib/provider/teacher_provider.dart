@@ -1,21 +1,21 @@
 import 'package:distribution_coursework/model/request/saveStudentRequest.dart';
+import 'package:distribution_coursework/model/request/saveTeacherRequest.dart';
 import 'package:distribution_coursework/model/student.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/service/student_service.dart';
+import 'package:distribution_coursework/service/teacher_service.dart';
 import 'package:flutter/material.dart';
 
-class StudentProvider extends ChangeNotifier {
-  final StudentService _studentService = StudentService();
+class TeacherProvider extends ChangeNotifier {
+  final TeacherService _teacherService = TeacherService();
 
-  static final StudentProvider _instance = StudentProvider.internal();
-  StudentProvider.internal();
-
-  Student student = Student.empty();
+  static final TeacherProvider _instance = TeacherProvider.internal();
+  TeacherProvider.internal();
 
   bool _busy = false;
   bool error = false;
 
-  factory StudentProvider(){
+  factory TeacherProvider(){
     return _instance;
   }
 
@@ -26,11 +26,11 @@ class StudentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveStudent(SaveStudentRequest studentRequest) async {
+  Future<void> saveTeacher(SaveTeacherRequest teacherRequest) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
-      student = await _studentService.saveStudent(studentRequest);
+      return await _teacherService.saveTeacher(teacherRequest);
     } catch (error) {
       _instance.error = true;
       rethrow;
@@ -39,11 +39,11 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> addPreferredTeacherForStudent(int teacherId) async {
+  Future<List<Teacher>> getAllTeachers() async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
-      return await _studentService.addPreferredTeacherForStudent(teacherId, student.id);
+      return await _teacherService.fetchAllTeachers();
     } catch (error) {
       _instance.error = true;
       rethrow;
@@ -51,4 +51,5 @@ class StudentProvider extends ChangeNotifier {
       _instance.setBusy(false);
     }
   }
+
 }

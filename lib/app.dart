@@ -1,9 +1,10 @@
 import 'package:distribution_coursework/provider/student_provider.dart';
+import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:distribution_coursework/screen/student_page.dart';
+import 'package:distribution_coursework/screen/teacher_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'main.dart';
 import 'provider/settings_provider.dart';
 import 'screen/register_page.dart';
 
@@ -18,6 +19,8 @@ class RootApp extends StatelessWidget {
             create: (context) => SettingsProvider()),
         ChangeNotifierProvider<StudentProvider>(
             create: (context) => StudentProvider()),
+        ChangeNotifierProvider<TeacherProvider>(
+            create: (context) => TeacherProvider()),
       ],
       child: MaterialApp(
           theme: ThemeData(
@@ -31,7 +34,8 @@ class RootApp extends StatelessWidget {
           routes: {
             "/": (context) => const RegisterPage(),
             "/register": (context) => const RegisterPage(),
-            "/student": (context) => const RegisterPage(),
+            "/student": (context) => const StudentPage(),
+            "/teacher": (context) => const TeacherPage(),
           }),
     );
   }

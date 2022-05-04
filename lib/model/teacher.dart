@@ -1,14 +1,15 @@
-class Student {
+
+class Teacher {
   int id;
   String name;
 
-  Student(this.name);
+  Teacher(this.name);
 
-  Student.empty()
+  Teacher.empty()
       : id = null,
         name = null;
 
-  Student.fromJson(dynamic obj) {
+  Teacher.fromJson(dynamic obj){
     id = obj["id"];
     name = obj["name"];
   }
