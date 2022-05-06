@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:distribution_coursework/model/request/saveStudentRequest.dart';
+import 'package:distribution_coursework/model/request/save_student_request.dart';
 import 'package:distribution_coursework/model/student.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/provider/settings_provider.dart';

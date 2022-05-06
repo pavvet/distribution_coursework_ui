@@ -1,3 +1,4 @@
+import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
 import 'package:distribution_coursework/screen/student_page.dart';
@@ -21,6 +22,8 @@ class RootApp extends StatelessWidget {
             create: (context) => StudentProvider()),
         ChangeNotifierProvider<TeacherProvider>(
             create: (context) => TeacherProvider()),
+        ChangeNotifierProvider<PreferenceProvider>(
+            create: (context) => PreferenceProvider()),
       ],
       child: MaterialApp(
           theme: ThemeData(

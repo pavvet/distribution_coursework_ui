@@ -1,5 +1,5 @@
-import 'package:distribution_coursework/model/request/saveStudentRequest.dart';
-import 'package:distribution_coursework/model/request/saveTeacherRequest.dart';
+import 'package:distribution_coursework/model/request/save_student_request.dart';
+import 'package:distribution_coursework/model/request/save_teacher_request.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
