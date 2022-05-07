@@ -86,18 +86,22 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   TextFormField(
                     controller: _nameController,
+                    decoration: const InputDecoration(
+                        labelText: 'ФИО', hintText: "Иванов Иван Иванович"),
                     validator: (value) {
                       return _validEmpty(value);
                     },
                   ),
                   TextFormField(
                     controller: _loginController,
+                    decoration: const InputDecoration(labelText: 'Логин'),
                     validator: (value) {
                       return _validEmpty(value);
                     },
                   ),
                   TextFormField(
                     controller: _passwordController,
+                    decoration: const InputDecoration(labelText: 'Пароль'),
                     validator: (value) {
                       return _validEmpty(value);
                     },
@@ -113,8 +117,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _nameController.text,
                                   _loginController.text,
                                   _passwordController.text);
-                              Provider.of<StudentProvider>(
-                                  context, listen: false)
+                              await Provider.of<StudentProvider>(context,
+                                      listen: false)
                                   .saveStudent(request);
                               Navigator.pushNamed(context, "/student");
                             } else {
@@ -122,17 +126,28 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _nameController.text,
                                   _loginController.text,
                                   _passwordController.text);
-                              Provider.of<TeacherProvider>(
-                                  context, listen: false)
+                              await Provider.of<TeacherProvider>(context,
+                                      listen: false)
                                   .saveTeacher(request);
                               Navigator.pushNamed(context, "/teacher");
                             }
                           }
                         } on SaveStudentException catch (exception) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(exception.message())));
                           if (kDebugMode) {
                             print(exception);
                           }
                         } on SaveTeacherException catch (exception) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(exception.message())));
+                          if (kDebugMode) {
+                            print(exception);
+                          }
+                        } catch (exception) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Произошла ошибка")));
                           if (kDebugMode) {
                             print(exception);
                           }

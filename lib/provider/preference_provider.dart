@@ -12,8 +12,6 @@ class PreferenceProvider extends ChangeNotifier {
   static final PreferenceProvider _instance = PreferenceProvider.internal();
   PreferenceProvider.internal();
 
-  Student student = Student.empty();
-
   bool _busy = false;
   bool error = false;
 
@@ -46,19 +44,6 @@ class PreferenceProvider extends ChangeNotifier {
     _instance.setBusy(true);
     try {
       return await _preferenceService.fetchAllPreference();
-    } catch (error) {
-      _instance.error = true;
-      rethrow;
-    } finally {
-      _instance.setBusy(false);
-    }
-  }
-
-  Future<void> addPreferencesForStudent(List<Preference> preferences) async {
-    _instance.error = false;
-    _instance.setBusy(true);
-    try {
-      return await _preferenceService.addPreferencesForStudent(preferences, student.id);
     } catch (error) {
       _instance.error = true;
       rethrow;

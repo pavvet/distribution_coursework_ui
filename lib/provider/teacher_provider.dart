@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:distribution_coursework/model/request/auth_teacher_request.dart';
 import 'package:distribution_coursework/model/request/save_student_request.dart';
 import 'package:distribution_coursework/model/request/save_teacher_request.dart';
 import 'package:distribution_coursework/model/student.dart';
@@ -15,6 +19,10 @@ class TeacherProvider extends ChangeNotifier {
   bool _busy = false;
   bool error = false;
 
+  Teacher _teacher;
+
+  Teacher get teacher => _teacher;
+
   factory TeacherProvider(){
     return _instance;
   }
@@ -26,11 +34,33 @@ class TeacherProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> init() async {
+    if (_teacher == null || !_teacher.isAuth()){
+      if (window.localStorage["teacher"] != null) {
+        _teacher = Teacher.fromJson(jsonDecode(window.localStorage["teacher"]));
+        notifyListeners();
+      }
+    }
+  }
+
   Future<void> saveTeacher(SaveTeacherRequest teacherRequest) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
-      return await _teacherService.saveTeacher(teacherRequest);
+      _instance._teacher = await _teacherService.saveTeacher(teacherRequest);
+    } catch (error) {
+      _instance.error = true;
+      rethrow;
+    } finally {
+      _instance.setBusy(false);
+    }
+  }
+
+  Future<void> authTeacher(AuthTeacherRequest teacherRequest) async {
+    _instance.error = false;
+    _instance.setBusy(true);
+    try {
+      _instance._teacher = await _teacherService.authTeacher(teacherRequest);
     } catch (error) {
       _instance.error = true;
       rethrow;

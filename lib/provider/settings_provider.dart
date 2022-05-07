@@ -5,16 +5,40 @@ class SettingsProvider extends ChangeNotifier{
     return "http://localhost:8095/student";
   }
 
+  String get authStudentUrl {
+    return "http://localhost:8095/authStudent";
+  }
+
   String get savePreferenceUrl {
     return "http://localhost:8095/preference";
+  }
+
+  String get saveCourseworkUrl {
+    return "http://localhost:8095/coursework";
   }
 
   String get registerTeacherUrl {
     return "http://localhost:8095/teacher";
   }
 
+  String get authTeacherUrl {
+    return "http://localhost:8095/authTeacher";
+  }
+
   String get getAllTeacherUrl {
     return "http://localhost:8095/teachers";
+  }
+
+  String get getAllStudentsUrl {
+    return "http://localhost:8095/students";
+  }
+
+  String get getAllCourseworkUrl {
+    return "http://localhost:8095/allCoursework";
+  }
+
+  String get getResultDistributionUrl {
+    return "http://localhost:8095/distribution";
   }
 
   String get getAllPreferenceUrl {
@@ -27,5 +51,9 @@ class SettingsProvider extends ChangeNotifier{
 
   String get addPreferencesForStudentUrl {
     return "http://localhost:8095/student/{studentId}/preferences";
+  }
+
+  String get addPreferencesForCourseworkUrl {
+    return "http://localhost:8095/coursework/{courseworkId}/preferences";
   }
 }

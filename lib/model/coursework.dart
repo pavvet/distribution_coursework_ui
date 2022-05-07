@@ -1,26 +1,26 @@
 import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 
-class Student {
+class Coursework {
   int id;
   String name;
   List<Preference> preferences;
   Teacher teacher;
 
-  Student(this.name);
+  Coursework(this.name);
 
-  Student.empty()
+  Coursework.empty()
       : id = null,
         name = null,
         preferences = <Preference>[],
         teacher = null;
 
-  Student.shotInfoFromJson(dynamic obj) {
+  Coursework.shotInfoFromJson(dynamic obj) {
     id = obj["id"];
     name = obj["name"];
   }
 
-  Student.fullInfoFromJson(dynamic obj) {
+  Coursework.fullInfoFromJson(dynamic obj) {
     id = obj["id"];
     name = obj["name"];
     preferences = <Preference>[];
@@ -30,9 +30,5 @@ class Student {
       });
     }
     teacher = obj["teacher"] != null ? Teacher.fromJson(obj["teacher"]) : null;
-  }
-
-  bool isAuth() {
-    return id != null && name != null;
   }
 }
