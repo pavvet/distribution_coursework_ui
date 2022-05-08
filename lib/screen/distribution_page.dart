@@ -81,7 +81,12 @@ class _DistributionPageState extends State<DistributionPage> {
                   Expanded(
                     child: Column(
                       children: [
-                        const Text("Студенты"),
+                        const Text(
+                          "Студенты",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             itemCount: _studentsResult.length,
@@ -102,7 +107,7 @@ class _DistributionPageState extends State<DistributionPage> {
                               }
                             });
                           },
-                          child: const Text("Обновить"),
+                          child: const Text("Распределить"),
                         ),
                       ],
                     ),
@@ -116,7 +121,12 @@ class _DistributionPageState extends State<DistributionPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Курсовые"),
+                        const Text(
+                          "Курсовые",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             itemCount: _courseworkResult.length,
@@ -150,7 +160,7 @@ class _DistributionPageState extends State<DistributionPage> {
     final StudentProvider studentProvider =
         Provider.of<StudentProvider>(context);
     final CourseworkProvider courseworkProvider =
-    Provider.of<CourseworkProvider>(context);
+        Provider.of<CourseworkProvider>(context);
     if (studentProvider.isBusy || courseworkProvider.isBusy) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -170,7 +180,12 @@ class _DistributionPageState extends State<DistributionPage> {
                   Expanded(
                     child: Column(
                       children: [
-                        const Text("Студенты"),
+                        const Text(
+                          "Студенты",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             itemCount: _students.length,
@@ -199,7 +214,12 @@ class _DistributionPageState extends State<DistributionPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Курсовые"),
+                        const Text(
+                          "Курсовые",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             itemCount: _coursework.length,
@@ -230,40 +250,28 @@ class _DistributionPageState extends State<DistributionPage> {
   }
 
   Widget _buildListItemCoursework(BuildContext context, int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      color: index == _selectedIndex ? Colors.blue : Colors.white60,
-      child:
-          Text(_coursework[index].name, style: const TextStyle(fontSize: 24)),
+    return ListTile(
+      title: Text(_coursework[index].name, style: const TextStyle(fontSize: 20)),
     );
   }
 
   Widget _buildListItemStudent(BuildContext context, int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      color: index == _selectedIndex ? Colors.blue : Colors.white60,
-      child: Text(_students[index].name, style: const TextStyle(fontSize: 24)),
+    return ListTile(
+      title: Text(_students[index].name, style: const TextStyle(fontSize: 20)),
     );
   }
 
   Widget _buildListItemCourseworkResult(BuildContext context, int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      color: index == _selectedIndex ? Colors.blue : Colors.white60,
-      child:
-      Text(_courseworkResult[index].name, style: const TextStyle(fontSize: 24)),
+    return ListTile(
+      title: Text(_courseworkResult[index].name,
+          style: const TextStyle(fontSize: 20)),
     );
   }
 
   Widget _buildListItemStudentResult(BuildContext context, int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      color: index == _selectedIndex ? Colors.blue : Colors.white60,
-      child: Text(_studentsResult[index].name, style: const TextStyle(fontSize: 24)),
+    return ListTile(
+      title: Text(_studentsResult[index].name,
+          style: const TextStyle(fontSize: 20)),
     );
   }
 }

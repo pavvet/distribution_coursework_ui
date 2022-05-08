@@ -13,7 +13,7 @@ class SelectTeacherWidget extends StatefulWidget {
 }
 
 class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
-  List<Teacher> _teachers;
+  List<Teacher> _teachers = List.empty(growable: true);
   int _selectedIndex = 0;
 
   @override

@@ -15,6 +15,10 @@ class PreferenceProvider extends ChangeNotifier {
   bool _busy = false;
   bool error = false;
 
+  List<Preference> _allPreference = List.empty(growable: true);
+
+  List<Preference> get allPreference => _allPreference;
+
   factory PreferenceProvider(){
     return _instance;
   }
@@ -43,7 +47,8 @@ class PreferenceProvider extends ChangeNotifier {
     _instance.error = false;
     _instance.setBusy(true);
     try {
-      return await _preferenceService.fetchAllPreference();
+      _instance._allPreference = await _preferenceService.fetchAllPreference();
+      return _allPreference;
     } catch (error) {
       _instance.error = true;
       rethrow;

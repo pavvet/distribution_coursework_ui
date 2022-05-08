@@ -1,12 +1,11 @@
 import 'package:distribution_coursework/model/coursework.dart';
-import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SwapChoiceWidget extends StatefulWidget {
-  SwapChoiceWidget({Key key}) : super(key: key);
+  const SwapChoiceWidget({Key key}) : super(key: key);
 
   @override
   _SwapChoiceState createState() => _SwapChoiceState();

@@ -10,6 +10,7 @@ import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
 import 'package:distribution_coursework/screen/components/add_preference.dart';
 import 'package:distribution_coursework/screen/components/split_choice.dart';
+import 'package:distribution_coursework/screen/components/split_choice_teacher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -83,6 +84,7 @@ class _TeacherPageState extends State<TeacherPage> {
       children: [
         _buildTeacherCourseworks(),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildFieldForNameCoursework(),
             _buildPreferencesList(),
@@ -154,7 +156,7 @@ class _TeacherPageState extends State<TeacherPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: SplitChoiceWidget(
+                    child: SplitChoiceTeacherWidget(
                       selectedItems: _selectedPreference,
                       items: _preference,
                     ),
@@ -236,7 +238,10 @@ class _TeacherPageState extends State<TeacherPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Предпочтительный руководитель"),
+                  const Text("Курсовые преподавателя",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Expanded(
                     child: ListView.builder(
                       itemCount: _courseworks.length,
@@ -245,12 +250,18 @@ class _TeacherPageState extends State<TeacherPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      _coursework = await Provider.of<CourseworkProvider>(context,
+                      _coursework = await Provider.of<CourseworkProvider>(
+                              context,
                               listen: false)
                           .getCoursework(_courseworks[_selectedIndex].id);
-                        _selectedPreference =_coursework.preferences;
-                        _nameTextController.text = _coursework.name;
-                        await _preference.removeWhere((preference) => _selectedPreference.contains(preference));
+                      _selectedPreference = _coursework.preferences;
+                      _nameTextController.text = _coursework.name;
+                      _preference = List.of(Provider.of<PreferenceProvider>(
+                              context,
+                              listen: false)
+                          .allPreference);
+                      _preference.removeWhere((preference) =>
+                          _selectedPreference.contains(preference));
                     },
                     child: const Text("Подтвердить"),
                   )
@@ -264,19 +275,16 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buildListItemCourseworks(BuildContext context, int index) {
-    return GestureDetector(
+    return ListTile(
       onTap: () {
         setState(() {
-          // устанавливаем индекс выделенного элемента
           _selectedIndex = index;
         });
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        color: index == _selectedIndex ? Colors.blue : Colors.white60,
+      tileColor: index == _selectedIndex ? Colors.blue : Colors.white,
+      title: Center(
         child: Text(_courseworks[index].name,
-            style: const TextStyle(fontSize: 24)),
+            style: const TextStyle(fontSize: 20)),
       ),
     );
   }
