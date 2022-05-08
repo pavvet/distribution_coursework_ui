@@ -66,6 +66,33 @@ class CourseworkProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<Coursework>> getCourseworksForTeacher(int teacherId) async {
+    _instance.error = false;
+    _instance.setBusy(true);
+    try {
+      return await _courseworkService.fetchCourseworksForTeacher(teacherId);
+    } catch (error) {
+      _instance.error = true;
+      rethrow;
+    } finally {
+      _instance.setBusy(false);
+    }
+  }
+
+  Future<Coursework> getCoursework(int courseworkId) async {
+    _instance.error = false;
+    _instance.setBusy(true);
+    try {
+      _instance._coursework = await _courseworkService.fetchCoursework(courseworkId);
+      return _instance._coursework;
+    } catch (error) {
+      _instance.error = true;
+      rethrow;
+    } finally {
+      _instance.setBusy(false);
+    }
+  }
+
   Future<void> addPreferencesForCoursework(List<Preference> preferences) async {
     _instance.error = false;
     _instance.setBusy(true);

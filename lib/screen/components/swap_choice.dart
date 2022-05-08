@@ -1,107 +1,218 @@
 import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/preference.dart';
+import 'package:distribution_coursework/provider/coursework_provider.dart';
+import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SwapChoiceWidget extends StatefulWidget {
-  List<Coursework> items = List.empty(growable: true);
-  List<Coursework> selectedItems = List.empty(growable: true);
-  List<Coursework> unselectedItems = List.empty(growable: true);
-
-  SwapChoiceWidget(
-      {Key key, this.items, this.selectedItems, this.unselectedItems})
-      : super(key: key);
+  SwapChoiceWidget({Key key}) : super(key: key);
 
   @override
   _SwapChoiceState createState() => _SwapChoiceState();
 }
 
 class _SwapChoiceState extends State<SwapChoiceWidget> {
+  List<Coursework> _courseworkList = List.empty(growable: true);
+  List<Coursework> _selectedCourseworkList = List.empty(growable: true);
+  List<Coursework> _unselectedCourseworkList = List.empty(growable: true);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final _student =
+          Provider.of<StudentProvider>(context, listen: false).student;
+      _selectedCourseworkList =
+          _student.selectedCoursework ?? List.empty(growable: true);
+      _unselectedCourseworkList =
+          _student.unselectedCoursework ?? List.empty(growable: true);
+      await Provider.of<CourseworkProvider>(context, listen: false)
+          .getAllCoursework()
+          .then((List<Coursework> value) {
+        _courseworkList = value
+            .where((coursework) =>
+                !_selectedCourseworkList.contains(coursework) &&
+                !_unselectedCourseworkList.contains(coursework))
+            .toList();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                const Text("Не хочу заниматься"),
-                Expanded(
-                  child: ListView.builder(
-                    controller: ScrollController(),
-                    itemCount: widget.unselectedItems.length,
-                    itemBuilder: _buildListUnselectedItem,
+    final CourseworkProvider courseworkProvider =
+        Provider.of<CourseworkProvider>(context);
+    if (courseworkProvider.isBusy) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 2,
+          child: Card(
+            elevation: 20,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Не хочу заниматься",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: ScrollController(),
+                                  itemCount: _unselectedCourseworkList.length,
+                                  itemBuilder: _buildListUnselectedItem,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const VerticalDivider(
+                            thickness: 1,
+                            color: Colors.black,
+                            indent: 0,
+                            endIndent: 0),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Могу заниматься",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: ScrollController(),
+                                  itemCount: _courseworkList.length,
+                                  itemBuilder: _buildListItem,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const VerticalDivider(
+                            thickness: 1,
+                            color: Colors.black,
+                            indent: 0,
+                            endIndent: 0),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Хочу заниматься",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: ScrollController(),
+                                  itemCount: _selectedCourseworkList.length,
+                                  itemBuilder: _buildListSelectedItem,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          Provider.of<CourseworkProvider>(context,
+                                  listen: false)
+                              .getAllCoursework()
+                              .then((List<Coursework> value) {
+                            _courseworkList = value
+                                .where((coursework) =>
+                                    !_selectedCourseworkList
+                                        .contains(coursework) &&
+                                    !_unselectedCourseworkList
+                                        .contains(coursework))
+                                .toList();
+                          });
+                        },
+                        child: const Text("Обновить"),
+                      ),
+                      Flexible(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final student = Provider.of<StudentProvider>(
+                                    context,
+                                    listen: false)
+                                .student;
+                            await Provider.of<CourseworkProvider>(context,
+                                    listen: false)
+                                .addCourseworkForStudent(
+                                    _selectedCourseworkList
+                                        .map((e) => e.id)
+                                        .toList(),
+                                    _unselectedCourseworkList
+                                        .map((e) => e.id)
+                                        .toList(),
+                                    student.id);
+                          },
+                          child: const Text("Подтвердить"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          const VerticalDivider(
-              thickness: 1, color: Colors.black, indent: 0, endIndent: 0),
-          Expanded(
-            child: Column(
-              children: [
-                const Text("Могу заниматься"),
-                Expanded(
-                  child: ListView.builder(
-                    controller: ScrollController(),
-                    itemCount: widget.items.length,
-                    itemBuilder: _buildListItem,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const VerticalDivider(
-              thickness: 1, color: Colors.black, indent: 0, endIndent: 0),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Хочу заниматься"),
-                Expanded(
-                  child: ListView.builder(
-                    controller: ScrollController(),
-                    itemCount: widget.selectedItems.length,
-                    itemBuilder: _buildListSelectedItem,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    }
   }
 
   Widget _buildListUnselectedItem(BuildContext context, int index) {
     return ListTile(
       onTap: () {
         setState(() {
-          widget.items.add(widget.unselectedItems[index]);
-          widget.unselectedItems.removeAt(index);
+          _courseworkList.add(_unselectedCourseworkList[index]);
+          _unselectedCourseworkList.removeAt(index);
         });
       },
-      title: Text(widget.unselectedItems[index].name,
-          style: const TextStyle(fontSize: 24)),
+      title: Center(
+        child: Text(_unselectedCourseworkList[index].name,
+            style: const TextStyle(fontSize: 20)),
+      ),
     );
   }
 
   Widget _buildListItem(BuildContext context, int index) {
-    String name = widget.items[index].name;
     return Dismissible(
       key: UniqueKey(),
       onDismissed: (DismissDirection direction) {
         if (direction == DismissDirection.startToEnd) {
           setState(() {
-            widget.selectedItems.add(widget.items[index]);
-            widget.items.removeAt(index);
+            _selectedCourseworkList.add(_courseworkList[index]);
+            _courseworkList.removeAt(index);
           });
         } else {
           setState(() {
-            widget.unselectedItems.add(widget.items[index]);
-            widget.items.removeAt(index);
+            _unselectedCourseworkList.add(_courseworkList[index]);
+            _courseworkList.removeAt(index);
           });
         }
       },
@@ -113,17 +224,19 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
       secondaryBackground: Container(
         color: Colors.red,
         alignment: Alignment.centerLeft,
-        child: const Icon(Icons.delete),
+        child: const Icon(Icons.clear),
       ),
       child: ListTile(
         onTap: () {
           setState(() {
-            widget.selectedItems.add(widget.items[index]);
-            widget.items.removeAt(index);
+            _selectedCourseworkList.add(_courseworkList[index]);
+            _courseworkList.removeAt(index);
           });
         },
-        title: Text(widget.items[index].name,
-            style: const TextStyle(fontSize: 24)),
+        title: Center(
+          child: Text(_courseworkList[index].name,
+              style: const TextStyle(fontSize: 20)),
+        ),
       ),
     );
   }
@@ -132,12 +245,14 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
     return ListTile(
       onTap: () {
         setState(() {
-          widget.items.add(widget.selectedItems[index]);
-          widget.selectedItems.removeAt(index);
+          _courseworkList.add(_selectedCourseworkList[index]);
+          _selectedCourseworkList.removeAt(index);
         });
       },
-      title: Text(widget.selectedItems[index].name,
-          style: const TextStyle(fontSize: 24)),
+      title: Center(
+        child: Text(_selectedCourseworkList[index].name,
+            style: const TextStyle(fontSize: 20)),
+      ),
     );
   }
 }

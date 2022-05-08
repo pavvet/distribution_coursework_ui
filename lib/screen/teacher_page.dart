@@ -1,3 +1,4 @@
+import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/request/save_coursework_request.dart';
 import 'package:distribution_coursework/model/request/save_student_request.dart';
@@ -28,18 +29,20 @@ class _TeacherPageState extends State<TeacherPage> {
 
   final _nameTextController = TextEditingController();
 
-  int selectedIndex;
+  int _selectedIndex;
+  Teacher _teacher;
+  Coursework _coursework = Coursework.empty();
   List<Preference> _preference = List.empty(growable: true);
   List<Preference> _selectedPreference = List.empty(growable: true);
+  List<Coursework> _courseworks = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Provider.of<TeacherProvider>(context, listen: false).init();
-      final teacher =
-          Provider.of<TeacherProvider>(context, listen: false).teacher;
-      if (teacher != null && teacher.isAuth()) {
+      _teacher = Provider.of<TeacherProvider>(context, listen: false).teacher;
+      if (_teacher != null && _teacher.isAuth()) {
         initAuthState();
       }
     });
@@ -51,6 +54,11 @@ class _TeacherPageState extends State<TeacherPage> {
           .getAllPreference()
           .then((List<Preference> value) {
         _preference = value;
+      });
+      Provider.of<CourseworkProvider>(context, listen: false)
+          .getCourseworksForTeacher(_teacher.id)
+          .then((List<Coursework> value) {
+        _courseworks = value;
       });
     });
   }
@@ -71,23 +79,29 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buildBody() {
-    return Column(
+    return Row(
       children: [
-        _buildFieldForNameCoursework(),
-        _buildPreferencesList(),
-        ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState.validate()) {
-              final teacher =
-                  Provider.of<TeacherProvider>(context, listen: false).teacher;
-              final request =
-                  SaveCourseworkRequest(_nameTextController.text, teacher.id);
-              Provider.of<CourseworkProvider>(context, listen: false)
-                  .saveCoursework(request);
-            }
-          },
-          child: const Text("Создать"),
-        )
+        _buildTeacherCourseworks(),
+        Column(
+          children: [
+            _buildFieldForNameCoursework(),
+            _buildPreferencesList(),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  final teacher =
+                      Provider.of<TeacherProvider>(context, listen: false)
+                          .teacher;
+                  final request = SaveCourseworkRequest(
+                      _nameTextController.text, teacher.id);
+                  Provider.of<CourseworkProvider>(context, listen: false)
+                      .saveCoursework(request);
+                }
+              },
+              child: const Text("Создать"),
+            )
+          ],
+        ),
       ],
     );
   }
@@ -202,42 +216,68 @@ class _TeacherPageState extends State<TeacherPage> {
       );
     }
   }
-/*
 
-
-  Widget _buildListItemPreference(BuildContext context, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedPreference.add(_preference[index]);
-          _preference.removeAt(index);
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        color: Colors.white60,
-        child:
-            Text(_preference[index].name, style: const TextStyle(fontSize: 24)),
-      ),
-    );
+  Widget _buildTeacherCourseworks() {
+    final CourseworkProvider courseworkProvider =
+        Provider.of<CourseworkProvider>(context);
+    if (courseworkProvider.isBusy) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 4,
+          height: MediaQuery.of(context).size.height / 2,
+          child: Card(
+            elevation: 20,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Предпочтительный руководитель"),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _courseworks.length,
+                      itemBuilder: _buildListItemCourseworks,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      _coursework = await Provider.of<CourseworkProvider>(context,
+                              listen: false)
+                          .getCoursework(_courseworks[_selectedIndex].id);
+                        _selectedPreference =_coursework.preferences;
+                        _nameTextController.text = _coursework.name;
+                        await _preference.removeWhere((preference) => _selectedPreference.contains(preference));
+                    },
+                    child: const Text("Подтвердить"),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
-  Widget _buildListItemSelectedPreference(BuildContext context, int index) {
+  Widget _buildListItemCourseworks(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _preference.add(_selectedPreference[index]);
-          _selectedPreference.removeAt(index);
+          // устанавливаем индекс выделенного элемента
+          _selectedIndex = index;
         });
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(vertical: 8),
-        color: Colors.white60,
-        child: Text(_selectedPreference[index].name,
+        color: index == _selectedIndex ? Colors.blue : Colors.white60,
+        child: Text(_courseworks[index].name,
             style: const TextStyle(fontSize: 24)),
       ),
     );
-  }*/
+  }
 }

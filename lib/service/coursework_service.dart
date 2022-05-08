@@ -34,6 +34,25 @@ class CourseworkService {
     return responseItems;
   }
 
+  Future<List<Coursework>> fetchCourseworksForTeacher(int teacherId) async {
+    final response = await _netUtil.get(SettingsProvider().getCourseworksForTeacherUrl.replaceAll("{teacherId}", teacherId.toString()));
+    List<Coursework> responseItems = List.empty(growable: true);
+    if ((response as List).isNotEmpty) {
+      responseItems = (response as List)
+          .map((coursework) => Coursework.shotInfoFromJson(coursework))
+          .toList();
+    }
+    return responseItems;
+  }
+
+  Future<Coursework> fetchCoursework(int courseworkId) async {
+    final response = await _netUtil.get(SettingsProvider().getCourseworkUrl.replaceAll("{courseworkId}", courseworkId.toString()));
+    if (response == null){
+      throw Exception();
+    }
+    return Coursework.fullInfoFromJson(response);
+  }
+
   Future<void> addCourseworkForStudent(
   List<int> selected, List<int> unselected, int studentId) async {
     final request = {
