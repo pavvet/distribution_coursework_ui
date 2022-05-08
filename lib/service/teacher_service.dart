@@ -18,7 +18,7 @@ class TeacherService {
     if (response == null) {
       throw SaveTeacherException();
     }
-    window.localStorage["teacher"] = response;
+    window.localStorage["teacher"] = jsonEncode(response);
     return Teacher.fromJson(response);
 
   }

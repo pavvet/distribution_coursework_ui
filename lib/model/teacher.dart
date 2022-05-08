@@ -1,6 +1,3 @@
-
-import 'dart:html';
-
 class Teacher {
   int id;
   String name;
@@ -14,6 +11,13 @@ class Teacher {
   Teacher.fromJson(dynamic obj){
     id = obj["id"];
     name = obj["name"];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{};
+    map["id"] = id;
+    map["name"] = name;
+    return map;
   }
 
   bool isAuth(){

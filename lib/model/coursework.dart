@@ -31,4 +31,25 @@ class Coursework {
     }
     teacher = obj["teacher"] != null ? Teacher.fromJson(obj["teacher"]) : null;
   }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{};
+    map["id"] = id;
+    map["name"] = name;
+    map["preferences"] = preferences.map((e) => e.toMap()).toList();
+    map["teacher"] = teacher.toMap();
+    return map;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Coursework &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ name.hashCode;
 }

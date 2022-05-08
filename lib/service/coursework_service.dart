@@ -33,4 +33,15 @@ class CourseworkService {
     }
     return responseItems;
   }
+
+  Future<void> addCourseworkForStudent(
+  List<int> selected, List<int> unselected, int studentId) async {
+    final request = {
+      "selected" : selected,
+      "unselected" : unselected
+    };
+    await _netUtil.put(SettingsProvider()
+        .addCourseworkForStudent
+        .replaceAll("{studentId}", studentId.toString()), body: jsonEncode(request));
+  }
 }

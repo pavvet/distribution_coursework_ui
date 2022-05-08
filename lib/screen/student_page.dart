@@ -1,14 +1,19 @@
+import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/request/save_student_request.dart';
 import 'package:distribution_coursework/model/request/save_teacher_request.dart';
 import 'package:distribution_coursework/model/teacher.dart';
+import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:distribution_coursework/screen/components/add_preference.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'components/split_choice.dart';
+import 'components/swap_choice.dart';
 import 'unauthorize_page.dart';
 
 class StudentPage extends StatefulWidget {
@@ -23,7 +28,11 @@ class _StudentPageState extends State<StudentPage> {
   int _selectedIndex;
   List<Teacher> _teachers = List.empty(growable: true);
   List<Preference> _preference = List.empty(growable: true);
-  List<Preference> _selectedPreference = List.empty(growable: true);
+  final List<Preference> _selectedPreference = List.empty(growable: true);
+
+  List<Coursework> _courseworkList = List.empty(growable: true);
+  List<Coursework> _selectedCourseworkList = List.empty(growable: true);
+  List<Coursework> _unselectedCourseworkList = List.empty(growable: true);
 
   @override
   void initState() {
@@ -52,6 +61,15 @@ class _StudentPageState extends State<StudentPage> {
             .where((preference) => !_selectedPreference.contains(preference))
             .toList();
       });
+      Provider.of<CourseworkProvider>(context, listen: false)
+          .getAllCoursework()
+          .then((List<Coursework> value) {
+        _courseworkList = value
+            .where((coursework) =>
+                !_selectedCourseworkList.contains(coursework) &&
+                !_unselectedCourseworkList.contains(coursework))
+            .toList();
+      });
     });
   }
 
@@ -72,11 +90,86 @@ class _StudentPageState extends State<StudentPage> {
 
   Widget _buildBody() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildPreferredTeacherList(),
-        _buildPreferencesList(),
+        Expanded(flex: 1, child: _buildPreferredTeacherList()),
+        Expanded(flex: 3, child: _buildCourseworkList()),
+        Expanded(flex: 2, child: _buildPreferencesList()),
       ],
     );
+  }
+
+  Widget _buildCourseworkList() {
+    final CourseworkProvider courseworkProvider =
+        Provider.of<CourseworkProvider>(context);
+    if (courseworkProvider.isBusy) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 2,
+          child: Card(
+            elevation: 20,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SwapChoiceWidget(
+                            selectedItems: _selectedCourseworkList,
+                            items: _courseworkList,
+                            unselectedItems: _unselectedCourseworkList,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                Provider.of<CourseworkProvider>(context,
+                                        listen: false)
+                                    .getAllCoursework()
+                                    .then((List<Coursework> value) {
+                                  _courseworkList = value
+                                      .where((coursework) =>
+                                          !_selectedCourseworkList
+                                              .contains(coursework) &&
+                                          !_unselectedCourseworkList
+                                              .contains(coursework))
+                                      .toList();
+                                });
+                              },
+                              child: const Text("Обновить"),
+                            ),
+                            Flexible(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  final student = Provider.of<StudentProvider>(context, listen: false).student;
+                                  await Provider.of<CourseworkProvider>(context,
+                                          listen: false)
+                                      .addCourseworkForStudent(_selectedCourseworkList.map((e) => e.id).toList(), _unselectedCourseworkList.map((e) => e.id).toList(), student.id);
+                                },
+                                child: const Text("Подтвердить"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildPreferencesList() {
@@ -95,65 +188,50 @@ class _StudentPageState extends State<StudentPage> {
             elevation: 20,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Column(
                 children: [
                   Expanded(
                     child: Column(
                       children: [
-                        const Text("Предпочтения"),
                         Expanded(
-                          child: ListView.builder(
-                            itemCount: _preference.length,
-                            itemBuilder: _buildListItemPreference,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            Provider.of<PreferenceProvider>(context,
-                                    listen: false)
-                                .getAllPreference()
-                                .then((List<Preference> value) {
-                              _preference = value
-                                  .where((preference) =>
-                                      !_selectedPreference.contains(preference))
-                                  .toList();
-                            });
-                          },
-                          child: const Text("Обновить"),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const VerticalDivider(
-                      thickness: 1,
-                      color: Colors.black,
-                      indent: 0,
-                      endIndent: 0),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Выбранные предпочтения"),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: _selectedPreference.length,
-                            itemBuilder: _buildListItemSelectedPreference,
+                          child: SplitChoiceWidget(
+                            selectedItems: _selectedPreference,
+                            items: _preference,
                           ),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                Provider.of<PreferenceProvider>(context,
+                                        listen: false)
+                                    .getAllPreference()
+                                    .then((List<Preference> value) {
+                                  _preference = value
+                                      .where((preference) =>
+                                          !_selectedPreference
+                                              .contains(preference))
+                                      .toList();
+                                });
+                              },
+                              child: const Text("Обновить"),
+                            ),
                             Flexible(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  inputDialog(context);
-                                  /*await Provider.of<StudentProvider>(context,
+                              child: AddPreferenceWidget(
+                                onTap: () async {
+                                  await Provider.of<PreferenceProvider>(context,
                                           listen: false)
-                                      .addPreferencesForStudent(
-                                          _selectedPreference);*/
+                                      .getAllPreference()
+                                      .then(
+                                    (List<Preference> value) {
+                                      _preference = value
+                                          .where((preference) =>
+                                              !_selectedPreference
+                                                  .contains(preference))
+                                          .toList();
+                                    },
+                                  );
                                 },
-                                child: const Text("Добавить"),
                               ),
                             ),
                             Flexible(
@@ -171,7 +249,7 @@ class _StudentPageState extends State<StudentPage> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -179,69 +257,6 @@ class _StudentPageState extends State<StudentPage> {
         ),
       );
     }
-  }
-
-  Future inputDialog(BuildContext context) async {
-    String preferenceName = "";
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Добавление предпочтений'),
-          content: Row(
-            children: <Widget>[
-              Expanded(
-                child: TextField(
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                      labelText: 'Название предпочтения',
-                      hintText: 'Программирование'),
-                  onChanged: (value) {
-                    preferenceName = value;
-                  },
-                ),
-              )
-            ],
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('Добавить'),
-              onPressed: () async {
-                try {
-                  if (preferenceName.isEmpty) {
-                    throw Exception();
-                  }
-                  await Provider.of<PreferenceProvider>(context, listen: false)
-                      .savePreference(preferenceName);
-                  await Provider.of<PreferenceProvider>(context, listen: false)
-                      .getAllPreference()
-                      .then((List<Preference> value) {
-                    _preference = value
-                        .where((preference) =>
-                            !_selectedPreference.contains(preference))
-                        .toList();
-                  });
-                  Navigator.of(context).pop();
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Произошла ошибка")));
-                  if (kDebugMode) {
-                    print(e);
-                  }
-                }
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Отмена'),
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Widget _buildPreferredTeacherList() {
@@ -301,42 +316,6 @@ class _StudentPageState extends State<StudentPage> {
         color: index == _selectedIndex ? Colors.blue : Colors.white60,
         child:
             Text(_teachers[index].name, style: const TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-
-  Widget _buildListItemPreference(BuildContext context, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedPreference.add(_preference[index]);
-          _preference.removeAt(index);
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        color: Colors.white60,
-        child:
-            Text(_preference[index].name, style: const TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-
-  Widget _buildListItemSelectedPreference(BuildContext context, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _preference.add(_selectedPreference[index]);
-          _selectedPreference.removeAt(index);
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        color: Colors.white60,
-        child: Text(_selectedPreference[index].name,
-            style: const TextStyle(fontSize: 24)),
       ),
     );
   }

@@ -7,6 +7,8 @@ import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:distribution_coursework/screen/components/add_preference.dart';
+import 'package:distribution_coursework/screen/components/split_choice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +78,8 @@ class _TeacherPageState extends State<TeacherPage> {
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState.validate()) {
-              final teacher = Provider.of<TeacherProvider>(context, listen: false).teacher;
+              final teacher =
+                  Provider.of<TeacherProvider>(context, listen: false).teacher;
               final request =
                   SaveCourseworkRequest(_nameTextController.text, teacher.id);
               Provider.of<CourseworkProvider>(context, listen: false)
@@ -134,79 +137,63 @@ class _TeacherPageState extends State<TeacherPage> {
             elevation: 20,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Column(
                 children: [
                   Expanded(
-                    child: Column(
-                      children: [
-                        const Text("Предпочтения"),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: _preference.length,
-                            itemBuilder: _buildListItemPreference,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            await Provider.of<PreferenceProvider>(context,
-                                    listen: false)
-                                .getAllPreference()
-                                .then((List<Preference> value) {
+                    child: SplitChoiceWidget(
+                      selectedItems: _selectedPreference,
+                      items: _preference,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          await Provider.of<PreferenceProvider>(context,
+                                  listen: false)
+                              .getAllPreference()
+                              .then(
+                            (List<Preference> value) {
                               _preference = value
                                   .where((preference) =>
                                       !_selectedPreference.contains(preference))
                                   .toList();
-                            });
+                            },
+                          );
+                        },
+                        child: const Text("Обновить"),
+                      ),
+                      Flexible(
+                        child: AddPreferenceWidget(
+                          onTap: () async {
+                            await Provider.of<PreferenceProvider>(context,
+                                    listen: false)
+                                .getAllPreference()
+                                .then(
+                              (List<Preference> value) {
+                                _preference = value
+                                    .where((preference) => !_selectedPreference
+                                        .contains(preference))
+                                    .toList();
+                              },
+                            );
                           },
-                          child: const Text("Обновить"),
                         ),
-                      ],
-                    ),
+                      ),
+                      Flexible(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await Provider.of<CourseworkProvider>(context,
+                                    listen: false)
+                                .addPreferencesForCoursework(
+                                    _selectedPreference);
+                          },
+                          child: const Text("Подтвердить"),
+                        ),
+                      ),
+                    ],
                   ),
-                  const VerticalDivider(
-                      thickness: 1,
-                      color: Colors.black,
-                      indent: 0,
-                      endIndent: 0),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Выбранные предпочтения"),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: _selectedPreference.length,
-                            itemBuilder: _buildListItemSelectedPreference,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Flexible(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  await inputDialog(context);
-                                },
-                                child: const Text("Добавить"),
-                              ),
-                            ),
-                            Flexible(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  await Provider.of<CourseworkProvider>(context,
-                                          listen: false)
-                                      .addPreferencesForCoursework(
-                                          _selectedPreference);
-                                },
-                                child: const Text("Подтвердить"),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),
@@ -215,69 +202,8 @@ class _TeacherPageState extends State<TeacherPage> {
       );
     }
   }
+/*
 
-  Future inputDialog(BuildContext context) async {
-    String preferenceName = "";
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Добавление предпочтений'),
-          content: Row(
-            children: <Widget>[
-              Expanded(
-                child: TextField(
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                      labelText: 'Название предпочтения',
-                      hintText: 'Программирование'),
-                  onChanged: (value) {
-                    preferenceName = value;
-                  },
-                ),
-              )
-            ],
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('Добавить'),
-              onPressed: () async {
-                try {
-                  if (preferenceName.isEmpty) {
-                    throw Exception();
-                  }
-                  await Provider.of<PreferenceProvider>(context, listen: false)
-                      .savePreference(preferenceName);
-                  await Provider.of<PreferenceProvider>(context, listen: false)
-                      .getAllPreference()
-                      .then((List<Preference> value) {
-                    _preference = value
-                        .where((preference) =>
-                            !_selectedPreference.contains(preference))
-                        .toList();
-                  });
-                  Navigator.of(context).pop();
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Произошла ошибка")));
-                  if (kDebugMode) {
-                    print(e);
-                  }
-                }
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Отмена'),
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Widget _buildListItemPreference(BuildContext context, int index) {
     return GestureDetector(
@@ -313,5 +239,5 @@ class _TeacherPageState extends State<TeacherPage> {
             style: const TextStyle(fontSize: 24)),
       ),
     );
-  }
+  }*/
 }

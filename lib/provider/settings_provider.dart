@@ -49,6 +49,10 @@ class SettingsProvider extends ChangeNotifier{
     return "http://localhost:8095/student/{studentId}/preferredTeacher/{teacherId}";
   }
 
+  String get addCourseworkForStudent {
+    return "http://localhost:8095/student/{studentId}/coursework";
+  }
+
   String get addPreferencesForStudentUrl {
     return "http://localhost:8095/student/{studentId}/preferences";
   }

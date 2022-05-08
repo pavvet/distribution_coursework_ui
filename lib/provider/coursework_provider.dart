@@ -79,4 +79,17 @@ class CourseworkProvider extends ChangeNotifier {
       _instance.setBusy(false);
     }
   }
+
+  Future<void> addCourseworkForStudent(List<int> selected, List<int> unselected, int studentId) async {
+    _instance.error = false;
+    _instance.setBusy(true);
+    try {
+      await _courseworkService.addCourseworkForStudent(selected, unselected, studentId);
+    } catch (error) {
+      _instance.error = true;
+      rethrow;
+    } finally {
+      _instance.setBusy(false);
+    }
+  }
 }
