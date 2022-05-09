@@ -89,15 +89,29 @@ class _TeacherPageState extends State<TeacherPage> {
             _buildFieldForNameCoursework(),
             _buildPreferencesList(),
             ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  final teacher =
-                      Provider.of<TeacherProvider>(context, listen: false)
-                          .teacher;
-                  final request = SaveCourseworkRequest(
-                      _nameTextController.text, teacher.id);
-                  Provider.of<CourseworkProvider>(context, listen: false)
-                      .saveCoursework(request);
+              onPressed: () async {
+                try {
+                  if (_formKey.currentState.validate()) {
+                    final teacher =
+                        Provider.of<TeacherProvider>(context, listen: false)
+                            .teacher;
+                    final request = SaveCourseworkRequest(
+                        _nameTextController.text, teacher.id);
+                    _courseworks.add(await Provider.of<CourseworkProvider>(
+                            context,
+                            listen: false)
+                        .saveCoursework(request));
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Произошла ошибка"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  if (kDebugMode) {
+                    print(e);
+                  }
                 }
               },
               child: const Text("Создать"),
@@ -140,6 +154,8 @@ class _TeacherPageState extends State<TeacherPage> {
   Widget _buildPreferencesList() {
     final PreferenceProvider preferenceProvider =
         Provider.of<PreferenceProvider>(context);
+    final Coursework coursework =
+        Provider.of<CourseworkProvider>(context, listen: false).coursework;
     if (preferenceProvider.isBusy) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -166,17 +182,29 @@ class _TeacherPageState extends State<TeacherPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          await Provider.of<PreferenceProvider>(context,
-                                  listen: false)
-                              .getAllPreference()
-                              .then(
-                            (List<Preference> value) {
-                              _preference = value
-                                  .where((preference) =>
-                                      !_selectedPreference.contains(preference))
-                                  .toList();
-                            },
-                          );
+                          try {
+                            await Provider.of<PreferenceProvider>(context,
+                                    listen: false)
+                                .getAllPreference()
+                                .then(
+                              (List<Preference> value) {
+                                _preference = value
+                                    .where((preference) => !_selectedPreference
+                                        .contains(preference))
+                                    .toList();
+                              },
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
                         },
                         child: const Text("Обновить"),
                       ),
@@ -199,12 +227,27 @@ class _TeacherPageState extends State<TeacherPage> {
                       ),
                       Flexible(
                         child: ElevatedButton(
-                          onPressed: () async {
-                            await Provider.of<CourseworkProvider>(context,
-                                    listen: false)
-                                .addPreferencesForCoursework(
-                                    _selectedPreference);
-                          },
+                          onPressed: coursework.id == null
+                              ? null
+                              : () async {
+                                  try {
+                                    await Provider.of<CourseworkProvider>(
+                                            context,
+                                            listen: false)
+                                        .addPreferencesForCoursework(
+                                            _selectedPreference);
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Произошла ошибка"),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    if (kDebugMode) {
+                                      print(e);
+                                    }
+                                  }
+                                },
                           child: const Text("Подтвердить"),
                         ),
                       ),
@@ -248,22 +291,65 @@ class _TeacherPageState extends State<TeacherPage> {
                       itemBuilder: _buildListItemCourseworks,
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      _coursework = await Provider.of<CourseworkProvider>(
-                              context,
-                              listen: false)
-                          .getCoursework(_courseworks[_selectedIndex].id);
-                      _selectedPreference = _coursework.preferences;
-                      _nameTextController.text = _coursework.name;
-                      _preference = List.of(Provider.of<PreferenceProvider>(
-                              context,
-                              listen: false)
-                          .allPreference);
-                      _preference.removeWhere((preference) =>
-                          _selectedPreference.contains(preference));
-                    },
-                    child: const Text("Подтвердить"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await Provider.of<CourseworkProvider>(context,
+                                    listen: false)
+                                .getCourseworksForTeacher(_teacher.id)
+                                .then((List<Coursework> value) {
+                              _courseworks = value;
+                            });
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: const Text("Обновить"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            if (_selectedIndex != null) {
+                              _coursework =
+                                  await Provider.of<CourseworkProvider>(context,
+                                          listen: false)
+                                      .getCoursework(
+                                          _courseworks[_selectedIndex].id);
+                              _selectedPreference = _coursework.preferences;
+                              _nameTextController.text = _coursework.name;
+                              _preference = List.of(
+                                  Provider.of<PreferenceProvider>(context,
+                                          listen: false)
+                                      .allPreference);
+                              _preference.removeWhere((preference) =>
+                                  _selectedPreference.contains(preference));
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: const Text("Подтвердить"),
+                      ),
+                    ],
                   )
                 ],
               ),

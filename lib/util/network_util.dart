@@ -79,27 +79,17 @@ class NetworkUtil {
 
   /// Стандартная обработка http-запросов
   dynamic _handleResponse(http.Response response) {
-    //Log.debug(text: "Обработка ответа от сервера ${response.request.url} : ${response.reasonPhrase}");
     final String res = utf8.decode(response.bodyBytes);
-    //Log.debug(text: "Тело ответа: $res");
     final int statusCode = response.statusCode;
-    //Log.debug(text: "Статус: $statusCode");
-    /*if (statusCode == 403 || statusCode == 401) {
-      throw sessionException;
-    } else if (statusCode == 429) {
-      throw new TooManyRequestsException();
-    } else if (statusCode < 200 || statusCode >= 400) {
-      throw NetworkRequestException("Произошла ошибка при получении ответа от сервера", statusCode);
-    }*/
+    if (statusCode < 200 || statusCode >= 400) {
+      throw Exception("Произошла ошибка при получении ответа от сервера c кодом $statusCode");
+    }
     if (res.isEmpty) {
       return;
     }
     return _decoder.convert(res);
   }
 
-  /// Подготовка заголовков для запросов.
-  /// К заголовкам [headers] добавляются заголовки [_initialHeaders],
-  /// если [isAuthenticatedRequest] = true, то к заголовкам [headers] - дополнительно добавится JWT
   Future<Map<String, String>> _prepareHeaders(
       Map<String, String> headers) async {
     final Map<String, String> resultHeaders = {};

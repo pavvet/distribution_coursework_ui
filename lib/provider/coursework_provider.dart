@@ -39,12 +39,13 @@ class CourseworkProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveCoursework(SaveCourseworkRequest courseworkRequest) async {
+  Future<Coursework> saveCoursework(SaveCourseworkRequest courseworkRequest) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
       _instance._coursework =
           await _courseworkService.saveCoursework(courseworkRequest);
+      return _instance._coursework;
     } catch (error) {
       _instance.error = true;
       rethrow;

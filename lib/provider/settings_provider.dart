@@ -34,7 +34,7 @@ class SettingsProvider extends ChangeNotifier{
   }
 
   String get getAllCourseworkUrl {
-    return "http://localhost:8095/allCoursework";
+    return "http://localhost:8095/courseworks";
   }
 
   String get getCourseworksForTeacherUrl {

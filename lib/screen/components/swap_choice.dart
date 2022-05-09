@@ -1,6 +1,7 @@
 import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -137,38 +138,62 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          Provider.of<CourseworkProvider>(context,
-                                  listen: false)
-                              .getAllCoursework()
-                              .then((List<Coursework> value) {
-                            _courseworkList = value
-                                .where((coursework) =>
-                                    !_selectedCourseworkList
-                                        .contains(coursework) &&
-                                    !_unselectedCourseworkList
-                                        .contains(coursework))
-                                .toList();
-                          });
+                          try {
+                            Provider.of<CourseworkProvider>(context,
+                                    listen: false)
+                                .getAllCoursework()
+                                .then((List<Coursework> value) {
+                              _courseworkList = value
+                                  .where((coursework) =>
+                                      !_selectedCourseworkList
+                                          .contains(coursework) &&
+                                      !_unselectedCourseworkList
+                                          .contains(coursework))
+                                  .toList();
+                            });
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
                         },
                         child: const Text("Обновить"),
                       ),
                       Flexible(
                         child: ElevatedButton(
                           onPressed: () async {
-                            final student = Provider.of<StudentProvider>(
-                                    context,
-                                    listen: false)
-                                .student;
-                            await Provider.of<CourseworkProvider>(context,
-                                    listen: false)
-                                .addCourseworkForStudent(
-                                    _selectedCourseworkList
-                                        .map((e) => e.id)
-                                        .toList(),
-                                    _unselectedCourseworkList
-                                        .map((e) => e.id)
-                                        .toList(),
-                                    student.id);
+                            try {
+                              final student = Provider.of<StudentProvider>(
+                                      context,
+                                      listen: false)
+                                  .student;
+                              await Provider.of<CourseworkProvider>(context,
+                                      listen: false)
+                                  .addCourseworkForStudent(
+                                      _selectedCourseworkList
+                                          .map((e) => e.id)
+                                          .toList(),
+                                      _unselectedCourseworkList
+                                          .map((e) => e.id)
+                                          .toList(),
+                                      student.id);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Произошла ошибка"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              if (kDebugMode) {
+                                print(e);
+                              }
+                            }
                           },
                           child: const Text("Подтвердить"),
                         ),

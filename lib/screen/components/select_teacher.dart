@@ -1,11 +1,11 @@
 import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SelectTeacherWidget extends StatefulWidget {
-
   const SelectTeacherWidget({Key key}) : super(key: key);
 
   @override
@@ -59,13 +59,52 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
                       itemBuilder: _buildListItemTeacher,
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await Provider.of<StudentProvider>(context, listen: false)
-                          .addPreferredTeacherForStudent(
-                          _teachers[_selectedIndex].id);
-                    },
-                    child: const Text("Подтвердить"),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await Provider.of<TeacherProvider>(context, listen: false)
+                                .getAllTeachers()
+                                .then((value) {
+                              _teachers = value;
+                            });
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: const Text("Обновить"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await Provider.of<StudentProvider>(context,
+                                    listen: false)
+                                .addPreferredTeacherForStudent(
+                                    _teachers[_selectedIndex].id);
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: const Text("Подтвердить"),
+                      ),
+                    ],
                   )
                 ],
               ),

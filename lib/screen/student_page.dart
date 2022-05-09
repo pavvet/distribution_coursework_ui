@@ -62,7 +62,7 @@ class _StudentPageState extends State<StudentPage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
+            children: const [
               Expanded(flex: 1, child: SelectTeacherWidget()),
               Expanded(flex: 3, child: SwapChoiceWidget()),
               Expanded(flex: 2, child: SplitChoiceStudentWidget()),

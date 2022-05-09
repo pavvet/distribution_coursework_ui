@@ -2,15 +2,14 @@ import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'add_preference.dart';
 
 class SplitChoiceStudentWidget extends StatefulWidget {
-
-  SplitChoiceStudentWidget({Key key})
-      : super(key: key);
+  const SplitChoiceStudentWidget({Key key}) : super(key: key);
 
   @override
   _SplitChoiceStudentState createState() => _SplitChoiceStudentState();
@@ -24,10 +23,9 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final _student =
-            Provider.of<StudentProvider>(context, listen: false).student;
-        _selectedPreference =
-            _student.preferences ?? List.empty(growable: true);
+      final _student =
+          Provider.of<StudentProvider>(context, listen: false).student;
+      _selectedPreference = _student.preferences ?? List.empty(growable: true);
       await Provider.of<PreferenceProvider>(context, listen: false)
           .getAllPreference()
           .then((List<Preference> value) {
@@ -113,15 +111,27 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          Provider.of<PreferenceProvider>(context,
-                                  listen: false)
-                              .getAllPreference()
-                              .then((List<Preference> value) {
-                            _preference = value
-                                .where((preference) =>
-                                    !_selectedPreference.contains(preference))
-                                .toList();
-                          });
+                          try {
+                            Provider.of<PreferenceProvider>(context,
+                                    listen: false)
+                                .getAllPreference()
+                                .then((List<Preference> value) {
+                              _preference = value
+                                  .where((preference) =>
+                                      !_selectedPreference.contains(preference))
+                                  .toList();
+                            });
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Произошла ошибка"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            if (kDebugMode) {
+                              print(e);
+                            }
+                          }
                         },
                         child: const Text("Обновить"),
                       ),
@@ -145,10 +155,22 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                       Flexible(
                         child: ElevatedButton(
                           onPressed: () async {
-                            await Provider.of<StudentProvider>(context,
-                                listen: false)
-                                .addPreferencesForStudent(
-                                _selectedPreference);
+                            try {
+                              await Provider.of<StudentProvider>(context,
+                                      listen: false)
+                                  .addPreferencesForStudent(
+                                      _selectedPreference);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Произошла ошибка"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              if (kDebugMode) {
+                                print(e);
+                              }
+                            }
                           },
                           child: const Text("Подтвердить"),
                         ),

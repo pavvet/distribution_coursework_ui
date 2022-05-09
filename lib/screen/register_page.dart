@@ -134,25 +134,35 @@ class _RegisterPageState extends State<RegisterPage> {
                           }
                         } on SaveStudentException catch (exception) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(exception.message())));
+                            SnackBar(
+                              content: Text(exception.message()),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           if (kDebugMode) {
                             print(exception);
                           }
                         } on SaveTeacherException catch (exception) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(exception.message())));
+                            SnackBar(
+                              content: Text(exception.message()),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           if (kDebugMode) {
                             print(exception);
                           }
                         } catch (exception) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Произошла ошибка")));
+                            const SnackBar(
+                              content: Text("Произошла ошибка"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           if (kDebugMode) {
                             print(exception);
                           }
                         }
-                        //Navigator.pushNamed(context, "/student");
                       },
                       child: const Text("Зарегистрироваться"),
                     ),
