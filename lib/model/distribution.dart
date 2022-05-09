@@ -1,7 +1,7 @@
 import 'package:distribution_coursework/model/pair_student_coursework.dart';
 
 class Distribution {
-  List<PairStudentCoursework> distribution;
+  List<PairStudentCoursework>? distribution;
 
 
   Distribution(this.distribution);
@@ -13,7 +13,7 @@ class Distribution {
     distribution = [];
     if (obj["distribution"] != null) {
       obj["distribution"].forEach((result) {
-        distribution.add(PairStudentCoursework.fromJson(result));
+        distribution!.add(PairStudentCoursework.fromJson(result));
       });
     }
   }

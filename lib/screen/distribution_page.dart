@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DistributionPage extends StatefulWidget {
-  const DistributionPage({Key key}) : super(key: key);
+  const DistributionPage({Key? key}) : super(key: key);
 
   @override
   State<DistributionPage> createState() => _DistributionPageState();
@@ -16,17 +16,17 @@ class DistributionPage extends StatefulWidget {
 
 class _DistributionPageState extends State<DistributionPage> {
   final _scaffoldKey = GlobalKey();
-  int _selectedIndex;
+  int? _selectedIndex;
   List<Coursework> _coursework = List.empty(growable: true);
   List<Student> _students = List.empty(growable: true);
 
-  List<Coursework> _courseworkResult = List.empty(growable: true);
-  List<Student> _studentsResult = List.empty(growable: true);
+  List<Coursework?> _courseworkResult = List.empty(growable: true);
+  List<Student?> _studentsResult = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       Provider.of<CourseworkProvider>(context, listen: false)
           .getAllCoursework()
           .then((value) {
@@ -251,26 +251,26 @@ class _DistributionPageState extends State<DistributionPage> {
 
   Widget _buildListItemCoursework(BuildContext context, int index) {
     return ListTile(
-      title: Text(_coursework[index].name, style: const TextStyle(fontSize: 20)),
+      title: Text(_coursework[index].name!, style: const TextStyle(fontSize: 20)),
     );
   }
 
   Widget _buildListItemStudent(BuildContext context, int index) {
     return ListTile(
-      title: Text(_students[index].name, style: const TextStyle(fontSize: 20)),
+      title: Text(_students[index].name!, style: const TextStyle(fontSize: 20)),
     );
   }
 
   Widget _buildListItemCourseworkResult(BuildContext context, int index) {
     return ListTile(
-      title: Text(_courseworkResult[index].name,
+      title: Text(_courseworkResult[index]!.name!,
           style: const TextStyle(fontSize: 20)),
     );
   }
 
   Widget _buildListItemStudentResult(BuildContext context, int index) {
     return ListTile(
-      title: Text(_studentsResult[index].name,
+      title: Text(_studentsResult[index]!.name!,
           style: const TextStyle(fontSize: 20)),
     );
   }

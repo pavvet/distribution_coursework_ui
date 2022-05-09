@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 
 class AddPreferenceWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final Function() onTap;
+  final Function()? onTap;
 
-  AddPreferenceWidget({Key key, this.onTap}) : super(key: key);
+  AddPreferenceWidget({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +50,11 @@ class AddPreferenceWidget extends StatelessWidget {
               child: const Text('Добавить'),
               onPressed: () async {
                 try {
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState!.validate()) {
                     await Provider.of<PreferenceProvider>(context,
                             listen: false)
                         .savePreference(preferenceName);
-                    await onTap();
+                    await onTap!();
                     Navigator.of(context).pop();
                   }
                 } catch (e) {

@@ -1,6 +1,6 @@
 class Preference {
-  int id;
-  String name;
+  int? id;
+  String? name;
 
   Preference(this.name);
 

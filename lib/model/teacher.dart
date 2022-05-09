@@ -1,6 +1,6 @@
 class Teacher {
-  int id;
-  String name;
+  int? id;
+  String? name;
 
   Teacher(this.name);
 

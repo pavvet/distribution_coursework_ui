@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key key}) : super(key: key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -20,7 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _scaffoldKey = GlobalKey();
   final _formKey = GlobalKey<FormState>();
 
-  Status _status = Status.student;
+  Status? _status = Status.student;
 
   final _nameController = TextEditingController();
   final _loginController = TextEditingController();
@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           leading: Radio<Status>(
                             value: Status.student,
                             groupValue: _status,
-                            onChanged: (Status value) {
+                            onChanged: (Status? value) {
                               setState(() {
                                 _status = value;
                               });
@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           leading: Radio<Status>(
                             value: Status.teacher,
                             groupValue: _status,
-                            onChanged: (Status value) {
+                            onChanged: (Status? value) {
                               setState(() {
                                 _status = value;
                               });
@@ -89,21 +89,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     decoration: const InputDecoration(
                         labelText: 'ФИО', hintText: "Иванов Иван Иванович"),
                     validator: (value) {
-                      return _validEmpty(value);
+                      return _validEmpty(value!);
                     },
                   ),
                   TextFormField(
                     controller: _loginController,
                     decoration: const InputDecoration(labelText: 'Логин'),
                     validator: (value) {
-                      return _validEmpty(value);
+                      return _validEmpty(value!);
                     },
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Пароль'),
                     validator: (value) {
-                      return _validEmpty(value);
+                      return _validEmpty(value!);
                     },
                   ),
                   Padding(
@@ -111,8 +111,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         try {
-                          if (_formKey.currentState.validate()) {
-                            if (_status.name == Status.student.name) {
+                          if (_formKey.currentState!.validate()) {
+                            if (_status!.name == Status.student.name) {
                               final request = SaveStudentRequest(
                                   _nameController.text,
                                   _loginController.text,
@@ -176,7 +176,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  String _validEmpty(String value) {
+  String? _validEmpty(String value) {
     if (value.isEmpty) {
       return "Поле не должно быть пустым";
     }

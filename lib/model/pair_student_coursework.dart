@@ -2,8 +2,8 @@ import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/student.dart';
 
 class PairStudentCoursework {
-  Student student;
-  Coursework coursework;
+  Student? student;
+  Coursework? coursework;
 
   PairStudentCoursework(this.student, this.coursework);
 

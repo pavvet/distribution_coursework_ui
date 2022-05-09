@@ -11,7 +11,7 @@ enum Status { student, teacher }
 
 class UnauthorizedPage extends StatelessWidget {
 
-  const UnauthorizedPage({Key key}) : super(key: key);
+  const UnauthorizedPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

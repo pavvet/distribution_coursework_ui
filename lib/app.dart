@@ -14,7 +14,7 @@ import 'screen/distribution_page.dart';
 import 'screen/register_page.dart';
 
 class RootApp extends StatelessWidget {
-  const RootApp({Key key}) : super(key: key);
+  const RootApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

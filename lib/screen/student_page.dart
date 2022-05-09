@@ -14,7 +14,7 @@ import 'components/swap_choice.dart';
 import 'unauthorize_page.dart';
 
 class StudentPage extends StatefulWidget {
-  const StudentPage({Key key}) : super(key: key);
+  const StudentPage({Key? key}) : super(key: key);
 
   @override
   State<StudentPage> createState() => _StudentPageState();
@@ -23,12 +23,12 @@ class StudentPage extends StatefulWidget {
 class _StudentPageState extends State<StudentPage> {
   final _scaffoldKey = GlobalKey();
 
-  Student _student;
+  Student? _student;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await Provider.of<StudentProvider>(context, listen: false).init();
     });
   }
@@ -57,7 +57,7 @@ class _StudentPageState extends State<StudentPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            _student != null ? _student.name : "",
+            _student != null ? _student!.name! : "",
             style: const TextStyle(fontSize: 40),
           ),
           Row(

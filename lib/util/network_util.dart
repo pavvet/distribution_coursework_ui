@@ -26,19 +26,19 @@ class NetworkUtil {
   };
 
   Future<dynamic> get(String url,
-      {Map<String, String> headers, timeout = DEFAULT_TIMEOUT}) async {
+      {Map<String, String>? headers, timeout = DEFAULT_TIMEOUT}) async {
     //url = replaceLocalUrl(url);
     //Log.debug(text: "URL запроса: $url");
 
     return await _makeHttpCall(
         (Map<String, String> actualHeaders) => _client
-            .get(Uri.tryParse(url), headers: actualHeaders)
+            .get(Uri.tryParse(url)!, headers: actualHeaders)
             .timeout(timeout),
         headers);
   }
 
   Future<dynamic> post(String url,
-      {Map<String, String> headers,
+      {Map<String, String>? headers,
       body,
       encoding,
       bool isAuthRequest = false,
@@ -48,14 +48,14 @@ class NetworkUtil {
     //Log.debug(text: "Тело запроса: $body");
     return await _makeHttpCall(
         (Map<String, String> actualHeaders) => _client
-            .post(Uri.tryParse(url),
+            .post(Uri.tryParse(url)!,
                 body: body, headers: actualHeaders, encoding: encoding)
             .timeout(timeout),
         headers);
   }
 
   Future<dynamic> put(String url,
-      {Map<String, String> headers,
+      {Map<String, String>? headers,
         body,
         encoding,
         bool isAuthRequest = false,
@@ -65,14 +65,14 @@ class NetworkUtil {
     //Log.debug(text: "Тело запроса: $body");
     return await _makeHttpCall(
             (Map<String, String> actualHeaders) =>
-            _client.put(Uri.tryParse(url), body: body, headers: actualHeaders, encoding: encoding).timeout(timeout),
+            _client.put(Uri.tryParse(url)!, body: body, headers: actualHeaders, encoding: encoding).timeout(timeout),
         headers);
   }
 
   Future<dynamic> _makeHttpCall(
       Future<http.Response> Function(Map<String, String> actualHeaders)
           httpCall,
-      Map<String, String> requestHeaders) async {
+      Map<String, String>? requestHeaders) async {
     return _handleResponse(
         await httpCall(await _prepareHeaders(requestHeaders)));
   }
@@ -91,7 +91,7 @@ class NetworkUtil {
   }
 
   Future<Map<String, String>> _prepareHeaders(
-      Map<String, String> headers) async {
+      Map<String, String>? headers) async {
     final Map<String, String> resultHeaders = {};
     resultHeaders.addAll(_initialHeaders);
     if (headers != null) {

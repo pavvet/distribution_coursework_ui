@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AuthorizationPage extends StatefulWidget {
-  const AuthorizationPage({Key key}) : super(key: key);
+  const AuthorizationPage({Key? key}) : super(key: key);
 
   @override
   State<AuthorizationPage> createState() => _AuthorizationPageState();
@@ -22,7 +22,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   final _scaffoldKey = GlobalKey();
   final _formKey = GlobalKey<FormState>();
 
-  Status _status = Status.student;
+  Status? _status = Status.student;
 
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -61,7 +61,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           leading: Radio<Status>(
                             value: Status.student,
                             groupValue: _status,
-                            onChanged: (Status value) {
+                            onChanged: (Status? value) {
                               setState(() {
                                 _status = value;
                               });
@@ -75,7 +75,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           leading: Radio<Status>(
                             value: Status.teacher,
                             groupValue: _status,
-                            onChanged: (Status value) {
+                            onChanged: (Status? value) {
                               setState(() {
                                 _status = value;
                               });
@@ -89,14 +89,14 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     controller: _loginController,
                     decoration: const InputDecoration(labelText: 'Логин'),
                     validator: (value) {
-                      return _validEmpty(value);
+                      return _validEmpty(value!);
                     },
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Пароль'),
                     validator: (value) {
-                      return _validEmpty(value);
+                      return _validEmpty(value!);
                     },
                   ),
                   Padding(
@@ -109,8 +109,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               try {
-                                if (_formKey.currentState.validate()) {
-                                  if (_status.name == Status.student.name) {
+                                if (_formKey.currentState!.validate()) {
+                                  if (_status!.name == Status.student.name) {
                                     final request = AuthStudentRequest(
                                         _loginController.text,
                                         _passwordController.text);
@@ -180,7 +180,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
     );
   }
 
-  String _validEmpty(String value) {
+  String? _validEmpty(String value) {
     if (value.isEmpty) {
       return "Поле не должно быть пустым";
     }

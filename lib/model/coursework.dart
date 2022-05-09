@@ -2,10 +2,10 @@ import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 
 class Coursework {
-  int id;
-  String name;
-  List<Preference> preferences;
-  Teacher teacher;
+  int? id;
+  String? name;
+  List<Preference>? preferences;
+  Teacher? teacher;
 
   Coursework(this.name);
 
@@ -26,7 +26,7 @@ class Coursework {
     preferences = <Preference>[];
     if (obj["preferences"] != null) {
       obj["preferences"].forEach((pref) {
-        preferences.add(Preference.fromJson(pref));
+        preferences!.add(Preference.fromJson(pref));
       });
     }
     teacher = obj["teacher"] != null ? Teacher.fromJson(obj["teacher"]) : null;
@@ -36,8 +36,8 @@ class Coursework {
     var map = <String, dynamic>{};
     map["id"] = id;
     map["name"] = name;
-    map["preferences"] = preferences.map((e) => e.toMap()).toList();
-    map["teacher"] = teacher.toMap();
+    map["preferences"] = preferences!.map((e) => e.toMap()).toList();
+    map["teacher"] = teacher!.toMap();
     return map;
   }
 

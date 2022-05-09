@@ -22,7 +22,7 @@ class PreferenceService {
   }
 
   Future<void> addPreferencesForStudent(List<Preference> preferences,
-      int studentId) async {
+      int? studentId) async {
     final request = {"preferences": preferences.map((e) => e.toMap()).toList()};
     await _netUtil.put(
         SettingsProvider()
@@ -32,7 +32,7 @@ class PreferenceService {
   }
 
   Future<void> addPreferencesForCoursework(List<Preference> preferences,
-      int courseworkId) async {
+      int? courseworkId) async {
     final request = {
       "preferences": preferences.map((e) => e.toMap()).toList()
     };
@@ -46,7 +46,7 @@ class PreferenceService {
     final response = await _netUtil.get(SettingsProvider().getAllPreferenceUrl);
     List<Preference> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
-      responseItems = (response as List)
+      responseItems = response
           .map((preference) => Preference.fromJson(preference))
           .toList();
     }

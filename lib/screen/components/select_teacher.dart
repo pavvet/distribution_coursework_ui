@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SelectTeacherWidget extends StatefulWidget {
-  const SelectTeacherWidget({Key key}) : super(key: key);
+  const SelectTeacherWidget({Key? key}) : super(key: key);
 
   @override
   State createState() => _SelectTeacherWidgetState();
@@ -19,7 +19,7 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await Provider.of<TeacherProvider>(context, listen: false)
           .getAllTeachers()
           .then((value) {
@@ -127,7 +127,7 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         color: index == _selectedIndex ? Colors.blue : Colors.white60,
         child: Center(
-            child: Text(_teachers[index].name,
+            child: Text(_teachers[index].name!,
                 style: const TextStyle(fontSize: 20))),
       ),
     );

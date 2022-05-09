@@ -19,9 +19,9 @@ class TeacherProvider extends ChangeNotifier {
   bool _busy = false;
   bool error = false;
 
-  Teacher _teacher;
+  Teacher? _teacher;
 
-  Teacher get teacher => _teacher;
+  Teacher? get teacher => _teacher;
 
   factory TeacherProvider(){
     return _instance;
@@ -35,9 +35,9 @@ class TeacherProvider extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    if (_teacher == null || !_teacher.isAuth()){
+    if (_teacher == null || !_teacher!.isAuth()){
       if (window.localStorage["teacher"] != null) {
-        _teacher = Teacher.fromJson(jsonDecode(window.localStorage["teacher"]));
+        _teacher = Teacher.fromJson(jsonDecode(window.localStorage["teacher"]!));
         notifyListeners();
       }
     }

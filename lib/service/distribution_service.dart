@@ -19,7 +19,7 @@ class DistributionService {
     final response = await _netUtil.get(SettingsProvider().getResultDistributionUrl);
     List<PairStudentCoursework> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
-      responseItems = (response as List)
+      responseItems = response
           .map((pair) => PairStudentCoursework.fromJson(pair))
           .toList();
     }

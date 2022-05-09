@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 import 'unauthorize_page.dart';
 
 class TeacherPage extends StatefulWidget {
-  const TeacherPage({Key key}) : super(key: key);
+  const TeacherPage({Key? key}) : super(key: key);
 
   @override
   State<TeacherPage> createState() => _TeacherPageState();
@@ -30,34 +30,34 @@ class _TeacherPageState extends State<TeacherPage> {
 
   final _nameTextController = TextEditingController();
 
-  int _selectedIndex;
-  Teacher _teacher;
+  int? _selectedIndex;
+  Teacher? _teacher;
   Coursework _coursework = Coursework.empty();
   List<Preference> _preference = List.empty(growable: true);
-  List<Preference> _selectedPreference = List.empty(growable: true);
+  List<Preference>? _selectedPreference = List.empty(growable: true);
   List<Coursework> _courseworks = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await Provider.of<TeacherProvider>(context, listen: false).init();
       _teacher = Provider.of<TeacherProvider>(context, listen: false).teacher;
-      if (_teacher != null && _teacher.isAuth()) {
+      if (_teacher != null && _teacher!.isAuth()) {
         initAuthState();
       }
     });
   }
 
   void initAuthState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       Provider.of<PreferenceProvider>(context, listen: false)
           .getAllPreference()
           .then((List<Preference> value) {
         _preference = value;
       });
       Provider.of<CourseworkProvider>(context, listen: false)
-          .getCourseworksForTeacher(_teacher.id)
+          .getCourseworksForTeacher(_teacher!.id)
           .then((List<Coursework> value) {
         _courseworks = value;
       });
@@ -91,10 +91,10 @@ class _TeacherPageState extends State<TeacherPage> {
             ElevatedButton(
               onPressed: () async {
                 try {
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState!.validate()) {
                     final teacher =
                         Provider.of<TeacherProvider>(context, listen: false)
-                            .teacher;
+                            .teacher!;
                     final request = SaveCourseworkRequest(
                         _nameTextController.text, teacher.id);
                     _courseworks.add(await Provider.of<CourseworkProvider>(
@@ -189,7 +189,7 @@ class _TeacherPageState extends State<TeacherPage> {
                                 .then(
                               (List<Preference> value) {
                                 _preference = value
-                                    .where((preference) => !_selectedPreference
+                                    .where((preference) => !_selectedPreference!
                                         .contains(preference))
                                     .toList();
                               },
@@ -217,7 +217,7 @@ class _TeacherPageState extends State<TeacherPage> {
                                 .then(
                               (List<Preference> value) {
                                 _preference = value
-                                    .where((preference) => !_selectedPreference
+                                    .where((preference) => !_selectedPreference!
                                         .contains(preference))
                                     .toList();
                               },
@@ -235,7 +235,7 @@ class _TeacherPageState extends State<TeacherPage> {
                                             context,
                                             listen: false)
                                         .addPreferencesForCoursework(
-                                            _selectedPreference);
+                                            _selectedPreference!);
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
@@ -299,7 +299,7 @@ class _TeacherPageState extends State<TeacherPage> {
                           try {
                             await Provider.of<CourseworkProvider>(context,
                                     listen: false)
-                                .getCourseworksForTeacher(_teacher.id)
+                                .getCourseworksForTeacher(_teacher!.id)
                                 .then((List<Coursework> value) {
                               _courseworks = value;
                             });
@@ -325,15 +325,15 @@ class _TeacherPageState extends State<TeacherPage> {
                                   await Provider.of<CourseworkProvider>(context,
                                           listen: false)
                                       .getCoursework(
-                                          _courseworks[_selectedIndex].id);
+                                          _courseworks[_selectedIndex!].id);
                               _selectedPreference = _coursework.preferences;
-                              _nameTextController.text = _coursework.name;
+                              _nameTextController.text = _coursework.name!;
                               _preference = List.of(
                                   Provider.of<PreferenceProvider>(context,
                                           listen: false)
                                       .allPreference);
                               _preference.removeWhere((preference) =>
-                                  _selectedPreference.contains(preference));
+                                  _selectedPreference!.contains(preference));
                             }
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -369,7 +369,7 @@ class _TeacherPageState extends State<TeacherPage> {
       },
       tileColor: index == _selectedIndex ? Colors.blue : Colors.white,
       title: Center(
-        child: Text(_courseworks[index].name,
+        child: Text(_courseworks[index].name!,
             style: const TextStyle(fontSize: 20)),
       ),
     );

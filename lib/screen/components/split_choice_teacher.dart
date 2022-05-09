@@ -2,10 +2,10 @@ import 'package:distribution_coursework/model/preference.dart';
 import 'package:flutter/material.dart';
 
 class SplitChoiceTeacherWidget extends StatefulWidget {
-  List<Preference> items = List.empty(growable: true);
-  List<Preference> selectedItems = List.empty(growable: true);
+  List<Preference>? items = List.empty(growable: true);
+  List<Preference>? selectedItems = List.empty(growable: true);
 
-  SplitChoiceTeacherWidget({Key key, this.items, this.selectedItems})
+  SplitChoiceTeacherWidget({Key? key, this.items, this.selectedItems})
       : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
                 Expanded(
                   child: ListView.builder(
                     controller: ScrollController(),
-                    itemCount: widget.items.length,
+                    itemCount: widget.items!.length,
                     itemBuilder: _buildListItem,
                   ),
                 ),
@@ -52,7 +52,7 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
                 Expanded(
                   child: ListView.builder(
                     controller: ScrollController(),
-                    itemCount: widget.selectedItems.length,
+                    itemCount: widget.selectedItems!.length,
                     itemBuilder: _buildListSelectedItem,
                   ),
                 ),
@@ -68,12 +68,12 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
     return ListTile(
       onTap: () {
         setState(() {
-          widget.selectedItems.add(widget.items[index]);
-          widget.items.removeAt(index);
+          widget.selectedItems!.add(widget.items![index]);
+          widget.items!.removeAt(index);
         });
       },
       title:
-      Center(child: Text(widget.items[index].name, style: const TextStyle(fontSize: 20))),
+      Center(child: Text(widget.items![index].name!, style: const TextStyle(fontSize: 20))),
     );
   }
 
@@ -81,12 +81,12 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
     return ListTile(
       onTap: () {
         setState(() {
-          widget.items.add(widget.selectedItems[index]);
-          widget.selectedItems.removeAt(index);
+          widget.items!.add(widget.selectedItems![index]);
+          widget.selectedItems!.removeAt(index);
         });
       },
       title: Center(
-        child: Text(widget.selectedItems[index].name,
+        child: Text(widget.selectedItems![index].name!,
             style: const TextStyle(fontSize: 20)),
       ),
     );

@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'add_preference.dart';
 
 class SplitChoiceStudentWidget extends StatefulWidget {
-  const SplitChoiceStudentWidget({Key key}) : super(key: key);
+  const SplitChoiceStudentWidget({Key? key}) : super(key: key);
 
   @override
   _SplitChoiceStudentState createState() => _SplitChoiceStudentState();
@@ -22,7 +22,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       final _student =
           Provider.of<StudentProvider>(context, listen: false).student;
       _selectedPreference = _student.preferences ?? List.empty(growable: true);
@@ -195,7 +195,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
         });
       },
       title: Center(
-          child: Text(_preference[index].name,
+          child: Text(_preference[index].name!,
               style: const TextStyle(fontSize: 20))),
     );
   }
@@ -209,7 +209,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
         });
       },
       title: Center(
-        child: Text(_selectedPreference[index].name,
+        child: Text(_selectedPreference[index].name!,
             style: const TextStyle(fontSize: 20)),
       ),
     );

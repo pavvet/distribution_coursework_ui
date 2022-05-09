@@ -37,7 +37,7 @@ class TeacherService {
     final response = await _netUtil.get(SettingsProvider().getAllTeacherUrl);
     List<Teacher> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
-      responseItems = (response as List)
+      responseItems = response
           .map((teacher) => Teacher.fromJson(teacher))
           .toList();
     }

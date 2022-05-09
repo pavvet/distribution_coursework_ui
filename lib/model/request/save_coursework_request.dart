@@ -1,6 +1,6 @@
 class SaveCourseworkRequest {
   String name;
-  int teacherId;
+  int? teacherId;
 
   SaveCourseworkRequest(this.name, this.teacherId);
 

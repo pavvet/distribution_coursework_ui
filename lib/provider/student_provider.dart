@@ -39,7 +39,7 @@ class StudentProvider extends ChangeNotifier {
     if (_student == null || !_student.isAuth()){
       if (window.localStorage["student"] != null) {
         _student = Student.fullInfoFromJson(
-            jsonDecode(window.localStorage["student"]));
+            jsonDecode(window.localStorage["student"]!));
         notifyListeners();
       }
     }
@@ -84,7 +84,7 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> addPreferredTeacherForStudent(int teacherId) async {
+  Future<void> addPreferredTeacherForStudent(int? teacherId) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {

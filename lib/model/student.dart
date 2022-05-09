@@ -3,12 +3,12 @@ import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 
 class Student {
-  int id;
-  String name;
-  List<Preference> preferences;
-  Teacher teacher;
-  List<Coursework> selectedCoursework;
-  List<Coursework> unselectedCoursework;
+  int? id;
+  String? name;
+  List<Preference>? preferences;
+  Teacher? teacher;
+  List<Coursework>? selectedCoursework;
+  List<Coursework>? unselectedCoursework;
   
 
   Student(this.name);
@@ -32,19 +32,19 @@ class Student {
     preferences = <Preference>[];
     if (obj["preferences"] != null) {
       obj["preferences"].forEach((pref) {
-        preferences.add(Preference.fromJson(pref));
+        preferences!.add(Preference.fromJson(pref));
       });
     }
     selectedCoursework = <Coursework>[];
     if (obj["selectedCoursework"] != null) {
       obj["selectedCoursework"].forEach((coursework) {
-        selectedCoursework.add(Coursework.shotInfoFromJson(coursework));
+        selectedCoursework!.add(Coursework.shotInfoFromJson(coursework));
       });
     }
     unselectedCoursework = <Coursework>[];
     if (obj["unselectedCoursework"] != null) {
       obj["unselectedCoursework"].forEach((coursework) {
-        unselectedCoursework.add(Coursework.shotInfoFromJson(coursework));
+        unselectedCoursework!.add(Coursework.shotInfoFromJson(coursework));
       });
     }
     teacher = obj["teacher"] != null ? Teacher.fromJson(obj["teacher"]) : null;

@@ -26,7 +26,7 @@ class StudentService {
     final response = await _netUtil.get(SettingsProvider().getAllStudentsUrl);
     List<Student> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
-      responseItems = (response as List)
+      responseItems = response
           .map((student) => Student.fullInfoFromJson(student))
           .toList();
     }
@@ -44,7 +44,7 @@ class StudentService {
   }
 
   Future<void> addPreferredTeacherForStudent(
-      int teacherId, int studentId) async {
+      int? teacherId, int? studentId) async {
     await _netUtil.put(SettingsProvider()
         .addPreferredTeacherForStudentUrl
         .replaceAll("{studentId}", studentId.toString())

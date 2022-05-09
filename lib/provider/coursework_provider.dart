@@ -67,7 +67,7 @@ class CourseworkProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Coursework>> getCourseworksForTeacher(int teacherId) async {
+  Future<List<Coursework>> getCourseworksForTeacher(int? teacherId) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
@@ -80,7 +80,7 @@ class CourseworkProvider extends ChangeNotifier {
     }
   }
 
-  Future<Coursework> getCoursework(int courseworkId) async {
+  Future<Coursework> getCoursework(int? courseworkId) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
@@ -108,7 +108,7 @@ class CourseworkProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> addCourseworkForStudent(List<int> selected, List<int> unselected, int studentId) async {
+  Future<void> addCourseworkForStudent(List<int?> selected, List<int?> unselected, int? studentId) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {

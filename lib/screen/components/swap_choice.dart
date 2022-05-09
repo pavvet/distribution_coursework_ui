@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SwapChoiceWidget extends StatefulWidget {
-  const SwapChoiceWidget({Key key}) : super(key: key);
+  const SwapChoiceWidget({Key? key}) : super(key: key);
 
   @override
   _SwapChoiceState createState() => _SwapChoiceState();
@@ -20,7 +20,7 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       final _student =
           Provider.of<StudentProvider>(context, listen: false).student;
       _selectedCourseworkList =
@@ -218,7 +218,7 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
         });
       },
       title: Center(
-        child: Text(_unselectedCourseworkList[index].name,
+        child: Text(_unselectedCourseworkList[index].name!,
             style: const TextStyle(fontSize: 20)),
       ),
     );
@@ -258,7 +258,7 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
           });
         },
         title: Center(
-          child: Text(_courseworkList[index].name,
+          child: Text(_courseworkList[index].name!,
               style: const TextStyle(fontSize: 20)),
         ),
       ),
@@ -274,7 +274,7 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
         });
       },
       title: Center(
-        child: Text(_selectedCourseworkList[index].name,
+        child: Text(_selectedCourseworkList[index].name!,
             style: const TextStyle(fontSize: 20)),
       ),
     );
