@@ -82,40 +82,23 @@ class _TeacherPageState extends State<TeacherPage> {
   Widget _buildBody() {
     return Row(
       children: [
-        _buildTeacherCourseworks(),
+        SizedBox(
+            width: MediaQuery.of(context).size.width / 4,
+            height: MediaQuery.of(context).size.height / 2,
+            child: _buildTeacherCourseworks()),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildFieldForNameCoursework(),
-            _buildPreferencesList(),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  if (_formKey.currentState!.validate()) {
-                    final teacher =
-                        Provider.of<TeacherProvider>(context, listen: false)
-                            .teacher!;
-                    final request = SaveCourseworkRequest(
-                        _nameTextController.text, teacher.id);
-                    _courseworks.add(await Provider.of<CourseworkProvider>(
-                            context,
-                            listen: false)
-                        .saveCoursework(request));
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Произошла ошибка"),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  if (kDebugMode) {
-                    print(e);
-                  }
-                }
-              },
-              child: const Text("Создать"),
-            )
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Column(
+                children: [
+                  _buildFieldForNameCoursework(),
+                  Expanded(child: _buildPreferencesList()),
+                ],
+              ),
+            ),
           ],
         ),
       ],
@@ -123,28 +106,24 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buildFieldForNameCoursework() {
-    return Center(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width / 2,
-        child: Card(
-          elevation: 20,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Form(
-              key: _formKey,
-              child: TextFormField(
-                controller: _nameTextController,
-                decoration: const InputDecoration(
-                    labelText: "Название курсовой работы",
-                    border: InputBorder.none),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Введите название курсовой";
-                  }
-                  return null;
-                },
-              ),
-            ),
+    return Card(
+      elevation: 20,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _nameTextController,
+            style: const TextStyle(fontSize: 24),
+            decoration: const InputDecoration(
+                labelText: "Название курсовой работы",
+                border: InputBorder.none),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Введите название курсовой";
+              }
+              return null;
+            },
           ),
         ),
       ),
@@ -154,210 +133,235 @@ class _TeacherPageState extends State<TeacherPage> {
   Widget _buildPreferencesList() {
     final PreferenceProvider preferenceProvider =
         Provider.of<PreferenceProvider>(context);
-    final Coursework coursework =
-        Provider.of<CourseworkProvider>(context, listen: false).coursework;
     if (preferenceProvider.isBusy) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const CircularProgressIndicator();
     } else {
-      return Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width / 2,
-          height: MediaQuery.of(context).size.height / 2,
-          child: Card(
-            elevation: 20,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
+      return Card(
+        elevation: 20,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: SplitChoiceTeacherWidget(
+                  selectedItems: _selectedPreference,
+                  items: _preference,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    child: SplitChoiceTeacherWidget(
-                      selectedItems: _selectedPreference,
-                      items: _preference,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await Provider.of<PreferenceProvider>(context,
-                                    listen: false)
-                                .getAllPreference()
-                                .then(
-                              (List<Preference> value) {
-                                _preference = value
-                                    .where((preference) => !_selectedPreference!
-                                        .contains(preference))
-                                    .toList();
-                              },
-                            );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-                        },
-                        child: const Text("Обновить"),
-                      ),
-                      Flexible(
-                        child: AddPreferenceWidget(
-                          onTap: () async {
-                            await Provider.of<PreferenceProvider>(context,
-                                    listen: false)
-                                .getAllPreference()
-                                .then(
-                              (List<Preference> value) {
-                                _preference = value
-                                    .where((preference) => !_selectedPreference!
-                                        .contains(preference))
-                                    .toList();
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                      Flexible(
-                        child: ElevatedButton(
-                          onPressed: coursework.id == null
-                              ? null
-                              : () async {
-                                  try {
-                                    await Provider.of<CourseworkProvider>(
-                                            context,
-                                            listen: false)
-                                        .addPreferencesForCoursework(
-                                            _selectedPreference!);
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text("Произошла ошибка"),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                    if (kDebugMode) {
-                                      print(e);
-                                    }
-                                  }
-                                },
-                          child: const Text("Подтвердить"),
-                        ),
-                      ),
-                    ],
-                  ),
+                  Flexible(child: _buttonRefreshPreference()),
+                  Flexible(child: _buttonAddPreference()),
+                  Flexible(child: _buttonCreateCoursework()),
+                  Flexible(child: _buttonConfirmPreference()),
                 ],
               ),
-            ),
+            ],
           ),
         ),
       );
     }
   }
 
+  Widget _buttonRefreshPreference() {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          await Provider.of<PreferenceProvider>(context, listen: false)
+              .getAllPreference()
+              .then(
+            (List<Preference> value) {
+              _preference = value
+                  .where((preference) =>
+                      !_selectedPreference!.contains(preference))
+                  .toList();
+            },
+          );
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Обновить"),
+    );
+  }
+
+  Widget _buttonAddPreference() {
+    return AddPreferenceWidget(
+      onTap: () async {
+        await Provider.of<PreferenceProvider>(context, listen: false)
+            .getAllPreference()
+            .then(
+          (List<Preference> value) {
+            _preference = value
+                .where(
+                    (preference) => !_selectedPreference!.contains(preference))
+                .toList();
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buttonCreateCoursework() {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          if (_formKey.currentState!.validate()) {
+            final teacher =
+                Provider.of<TeacherProvider>(context, listen: false).teacher!;
+            final request =
+                SaveCourseworkRequest(_nameTextController.text, teacher.id);
+            _courseworks.add(
+                await Provider.of<CourseworkProvider>(context, listen: false)
+                    .saveCoursework(request));
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Создать"),
+    );
+  }
+
+  Widget _buttonConfirmPreference() {
+    final coursework =
+        Provider.of<CourseworkProvider>(context, listen: false).coursework;
+    return ElevatedButton(
+      onPressed: coursework.id == null
+          ? null
+          : () async {
+              try {
+                await Provider.of<CourseworkProvider>(context, listen: false)
+                    .addPreferencesForCoursework(_selectedPreference!);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Произошла ошибка"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                if (kDebugMode) {
+                  print(e);
+                }
+              }
+            },
+      child: const Text("Подтвердить"),
+    );
+  }
+
   Widget _buildTeacherCourseworks() {
     final CourseworkProvider courseworkProvider =
         Provider.of<CourseworkProvider>(context);
     if (courseworkProvider.isBusy) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const CircularProgressIndicator();
     } else {
-      return Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width / 4,
-          height: MediaQuery.of(context).size.height / 2,
-          child: Card(
-            elevation: 20,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Курсовые преподавателя",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _courseworks.length,
-                      itemBuilder: _buildListItemCourseworks,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await Provider.of<CourseworkProvider>(context,
-                                    listen: false)
-                                .getCourseworksForTeacher(_teacher!.id)
-                                .then((List<Coursework> value) {
-                              _courseworks = value;
-                            });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-                        },
-                        child: const Text("Обновить"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            if (_selectedIndex != null) {
-                              _coursework =
-                                  await Provider.of<CourseworkProvider>(context,
-                                          listen: false)
-                                      .getCoursework(
-                                          _courseworks[_selectedIndex!].id);
-                              _selectedPreference = _coursework.preferences;
-                              _nameTextController.text = _coursework.name!;
-                              _preference = List.of(
-                                  Provider.of<PreferenceProvider>(context,
-                                          listen: false)
-                                      .allPreference);
-                              _preference.removeWhere((preference) =>
-                                  _selectedPreference!.contains(preference));
-                            }
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-                        },
-                        child: const Text("Подтвердить"),
-                      ),
-                    ],
-                  )
-                ],
+      return Card(
+        elevation: 20,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Курсовые преподавателя",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-            ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: _courseworks.length,
+                    itemBuilder: _buildListItemCourseworks,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Flexible(child: _buttonRefreshCourseworks()),
+                  Flexible(child: _buttonConfirmCourseworks())
+                ],
+              )
+            ],
           ),
         ),
       );
     }
+  }
+
+  Widget _buttonRefreshCourseworks() {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          await Provider.of<CourseworkProvider>(context, listen: false)
+              .getCourseworksForTeacher(_teacher!.id)
+              .then((List<Coursework> value) {
+            _courseworks = value;
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Обновить"),
+    );
+  }
+
+  Widget _buttonConfirmCourseworks() {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          if (_selectedIndex != null) {
+            _coursework =
+                await Provider.of<CourseworkProvider>(context, listen: false)
+                    .getCoursework(_courseworks[_selectedIndex!].id);
+            _selectedPreference = _coursework.preferences;
+            _nameTextController.text = _coursework.name!;
+            _preference = List.of(
+                Provider.of<PreferenceProvider>(context, listen: false)
+                    .allPreference);
+            _preference.removeWhere(
+                (preference) => _selectedPreference!.contains(preference));
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Подтвердить"),
+    );
   }
 
   Widget _buildListItemCourseworks(BuildContext context, int index) {

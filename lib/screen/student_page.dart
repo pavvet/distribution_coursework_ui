@@ -1,11 +1,6 @@
-import 'package:distribution_coursework/model/coursework.dart';
-import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/student.dart';
-import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
-import 'package:distribution_coursework/screen/components/add_preference.dart';
 import 'package:distribution_coursework/screen/components/select_teacher.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

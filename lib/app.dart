@@ -16,6 +16,24 @@ import 'screen/register_page.dart';
 class RootApp extends StatelessWidget {
   const RootApp({Key? key}) : super(key: key);
 
+  static const _bluePrimaryValue = -14137996;
+
+  static const MaterialColor blue = MaterialColor(
+    _bluePrimaryValue,
+    <int, Color>{
+      50:  Color(-14137996),
+      100: Color(-14137996),
+      200: Color(-14137996),
+      300: Color(-14137996),
+      400: Color(-14137996),
+      500: Color(_bluePrimaryValue),
+      600: Color(-14137996),
+      700: Color(-14137996),
+      800: Color(-14137996),
+      900: Color(-14137996),
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -35,9 +53,24 @@ class RootApp extends StatelessWidget {
       ],
       child: MaterialApp(
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: blue,
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                textStyle:
+                    MaterialStateProperty.all(const TextStyle(fontSize: 17)),
+                minimumSize: MaterialStateProperty.all(const Size(150, 45)),
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.black26;
+                    }
+                    return const Color(-14137996);
+                  },
+                ),
+              ),
+            ),
             buttonTheme: const ButtonThemeData(
-              buttonColor: Colors.blue,
+              buttonColor: Colors.red,
               textTheme: ButtonTextTheme.primary,
             ),
           ),
