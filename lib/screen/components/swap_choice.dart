@@ -72,7 +72,11 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(
+                                    color: Colors.black,
+                                  ),
                                   controller: ScrollController(),
                                   itemCount: _unselectedCourseworkList.length,
                                   itemBuilder: _buildListUnselectedItem,
@@ -96,7 +100,11 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(
+                                    color: Colors.black,
+                                  ),
                                   controller: ScrollController(),
                                   itemCount: _courseworkList.length,
                                   itemBuilder: _buildListItem,
@@ -121,7 +129,11 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(
+                                    color: Colors.black,
+                                  ),
                                   controller: ScrollController(),
                                   itemCount: _selectedCourseworkList.length,
                                   itemBuilder: _buildListSelectedItem,
@@ -155,24 +167,17 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
     }
   }
 
-  Widget _buttonConfirmCourseworks(){
+  Widget _buttonConfirmCourseworks() {
     return ElevatedButton(
       onPressed: () async {
         try {
-          final student = Provider.of<StudentProvider>(
-              context,
-              listen: false)
-              .student;
-          await Provider.of<CourseworkProvider>(context,
-              listen: false)
+          final student =
+              Provider.of<StudentProvider>(context, listen: false).student;
+          await Provider.of<CourseworkProvider>(context, listen: false)
               .addCourseworkForStudent(
-              _selectedCourseworkList
-                  .map((e) => e.id)
-                  .toList(),
-              _unselectedCourseworkList
-                  .map((e) => e.id)
-                  .toList(),
-              student.id);
+                  _selectedCourseworkList.map((e) => e.id).toList(),
+                  _unselectedCourseworkList.map((e) => e.id).toList(),
+                  student.id);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -189,20 +194,17 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
     );
   }
 
-  Widget _buttonRefreshCourseworks(){
+  Widget _buttonRefreshCourseworks() {
     return ElevatedButton(
       onPressed: () async {
         try {
-          Provider.of<CourseworkProvider>(context,
-              listen: false)
+          Provider.of<CourseworkProvider>(context, listen: false)
               .getAllCoursework()
               .then((List<Coursework> value) {
             _courseworkList = value
                 .where((coursework) =>
-            !_selectedCourseworkList
-                .contains(coursework) &&
-                !_unselectedCourseworkList
-                    .contains(coursework))
+                    !_selectedCourseworkList.contains(coursework) &&
+                    !_unselectedCourseworkList.contains(coursework))
                 .toList();
           });
         } catch (e) {
@@ -220,7 +222,6 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
       child: const Text("Обновить"),
     );
   }
-
 
   Widget _buildListUnselectedItem(BuildContext context, int index) {
     return ListTile(

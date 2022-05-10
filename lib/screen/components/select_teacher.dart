@@ -60,7 +60,10 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Expanded(
-                    child: ListView.builder(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(
+                        color: Colors.black,
+                      ),
                       itemCount: _teachers.length,
                       itemBuilder: _buildListItemTeacher,
                     ),
@@ -68,8 +71,8 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buttonRefreshTeacher(),
-                      _buttonConfirmTeacher()
+                      //Expanded(child: _buttonRefreshTeacher()),
+                      Expanded(child: _buttonConfirmTeacher())
                     ],
                   )
                 ],

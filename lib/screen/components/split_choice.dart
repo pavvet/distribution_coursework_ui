@@ -69,7 +69,11 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                  const Divider(
+                                    color: Colors.black,
+                                  ),
                                   controller: ScrollController(),
                                   itemCount: _preference.length,
                                   itemBuilder: _buildListItem,
@@ -94,7 +98,11 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                  const Divider(
+                                    color: Colors.black,
+                                  ),
                                   controller: ScrollController(),
                                   itemCount: _selectedPreference.length,
                                   itemBuilder: _buildListSelectedItem,

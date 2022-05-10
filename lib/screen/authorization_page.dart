@@ -1,8 +1,6 @@
 import 'package:distribution_coursework/exception/app_exception.dart';
 import 'package:distribution_coursework/model/request/auth_student_request.dart';
 import 'package:distribution_coursework/model/request/auth_teacher_request.dart';
-import 'package:distribution_coursework/model/request/save_student_request.dart';
-import 'package:distribution_coursework/model/request/save_teacher_request.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -19,7 +17,6 @@ class AuthorizationPage extends StatefulWidget {
 enum Status { student, teacher }
 
 class _AuthorizationPageState extends State<AuthorizationPage> {
-  final _scaffoldKey = GlobalKey();
   final _formKey = GlobalKey<FormState>();
 
   Status? _status = Status.student;

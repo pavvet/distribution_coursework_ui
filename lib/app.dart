@@ -52,6 +52,7 @@ class RootApp extends StatelessWidget {
             create: (context) => DistributionProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: blue,
             elevatedButtonTheme: ElevatedButtonThemeData(

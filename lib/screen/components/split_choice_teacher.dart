@@ -29,7 +29,11 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Expanded(
-                  child: ListView.builder(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                    const Divider(
+                      color: Colors.black,
+                    ),
                     controller: ScrollController(),
                     itemCount: widget.items!.length,
                     itemBuilder: _buildListItem,
@@ -50,7 +54,11 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Expanded(
-                  child: ListView.builder(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                    const Divider(
+                      color: Colors.black,
+                    ),
                     controller: ScrollController(),
                     itemCount: widget.selectedItems!.length,
                     itemBuilder: _buildListSelectedItem,

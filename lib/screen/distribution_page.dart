@@ -51,19 +51,16 @@ class _DistributionPageState extends State<DistributionPage> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      key: _scaffoldKey,
-      title: const Center(child: Text("Распределение курсовых работ")),
-      leading: Builder(
-        builder: (BuildContext context) {
+        key: _scaffoldKey,
+        title: const Center(child: Text("Распределение курсовых работ")),
+        leading: Builder(builder: (BuildContext context) {
           return IconButton(
               constraints: const BoxConstraints.expand(width: 80, height: 80),
               onPressed: () {
                 Navigator.pushNamed(context, "/auth");
               },
               icon: const Icon(Icons.arrow_back));
-        }
-      )
-    );
+        }));
   }
 
   Widget _buildBody() {
@@ -110,7 +107,10 @@ class _DistributionPageState extends State<DistributionPage> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
+                        child: ListView.separated(
+                          separatorBuilder: (context, index) => const Divider(
+                            color: Colors.black,
+                          ),
                           controller: ScrollController(),
                           itemCount: _students.length,
                           itemBuilder: _buildListItemStudent,
@@ -157,7 +157,10 @@ class _DistributionPageState extends State<DistributionPage> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
+                        child: ListView.separated(
+                          separatorBuilder: (context, index) => const Divider(
+                            color: Colors.black,
+                          ),
                           controller: ScrollController(),
                           itemCount: _coursework.length,
                           itemBuilder: _buildListItemCoursework,
@@ -229,7 +232,7 @@ class _DistributionPageState extends State<DistributionPage> {
                           ),
                           controller: ScrollController(),
                           itemCount: _studentsResult.length,
-                          itemBuilder: _buildListItemStudentResult,
+                          itemBuilder: _buildListItemDistributionResult,
                         ),
                       ),
                     ),
@@ -266,54 +269,6 @@ class _DistributionPageState extends State<DistributionPage> {
                   ],
                 ),
               ),
-              /*const VerticalDivider(
-                  thickness: 1, color: Colors.black, indent: 0, endIndent: 0),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Курсовые",
-                      textAlign: TextAlign.center,
-                      style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
-                          controller: ScrollController(),
-                          itemCount: _courseworkResult.length,
-                          itemBuilder: _buildListItemCourseworkResult,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          await Provider.of<CourseworkProvider>(context,
-                              listen: false)
-                              .getAllCoursework()
-                              .then((List<Coursework> value) {
-                            _coursework = value;
-                          });
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Произошла ошибка"),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          if (kDebugMode) {
-                            print(e);
-                          }
-                        }
-                      },
-                      child: const Text("Обновить"),
-                    ),
-                  ],
-                ),
-              )*/
             ],
           ),
         ),
@@ -334,14 +289,7 @@ class _DistributionPageState extends State<DistributionPage> {
     );
   }
 
-  Widget _buildListItemCourseworkResult(BuildContext context, int index) {
-    return ListTile(
-      title: Text(_courseworkResult[index]!.name!,
-          style: const TextStyle(fontSize: 20)),
-    );
-  }
-
-  Widget _buildListItemStudentResult(BuildContext context, int index) {
+  Widget _buildListItemDistributionResult(BuildContext context, int index) {
     return ListTile(
       title: Row(
         children: [

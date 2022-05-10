@@ -353,17 +353,15 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buttonCreateCourseworks() {
-    final allPreference = Provider.of<PreferenceProvider>(context, listen: false).allPreference;
     return ElevatedButton(
       onPressed: () async {
         try {
           Provider.of<CourseworkProvider>(context, listen: false).coursework =
               Coursework.empty();
-          _nameTextController.clear();
-          _preference = List.of(allPreference);
-          _selectedPreference!.clear();
           setState(() {
-
+            _nameTextController.clear();
+            _selectedPreference!.clear();
+            _preference = List.of(Provider.of<PreferenceProvider>(context, listen: false).allPreference);
           });
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
