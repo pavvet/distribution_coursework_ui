@@ -43,18 +43,17 @@ class _StudentPageState extends State<StudentPage> {
 
   AppBar _buildAppBar() {
     return AppBar(
-        key: _scaffoldKey,
-        title: const Center(child: Text("Личная страница студента")),
-        leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                  constraints: const BoxConstraints.expand(width: 80, height: 80),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/auth");
-                  },
-                  icon: const Icon(Icons.arrow_back));
-            }
-        )
+      key: _scaffoldKey,
+      title: const Center(child: Text("Личная страница студента")),
+      leading: Builder(builder: (BuildContext context) {
+        return IconButton(
+            constraints: const BoxConstraints.expand(width: 80, height: 80),
+            onPressed: () {
+              Provider.of<StudentProvider>(context, listen: false).exit();
+              Navigator.pushNamed(context, "/auth");
+            },
+            icon: const Icon(Icons.arrow_back));
+      }),
     );
   }
 

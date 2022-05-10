@@ -81,6 +81,7 @@ class _TeacherPageState extends State<TeacherPage> {
         return IconButton(
             constraints: const BoxConstraints.expand(width: 80, height: 80),
             onPressed: () {
+              Provider.of<TeacherProvider>(context, listen: false).exit();
               Navigator.pushNamed(context, "/auth");
             },
             icon: const Icon(Icons.arrow_back));

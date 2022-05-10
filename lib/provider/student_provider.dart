@@ -5,7 +5,6 @@ import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/request/auth_student_request.dart';
 import 'package:distribution_coursework/model/request/save_student_request.dart';
 import 'package:distribution_coursework/model/student.dart';
-import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/service/preference_service.dart';
 import 'package:distribution_coursework/service/student_service.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +42,10 @@ class StudentProvider extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  void exit(){
+    window.localStorage.remove("student");
   }
 
   Future<void> saveStudent(SaveStudentRequest studentRequest) async {
@@ -88,7 +91,8 @@ class StudentProvider extends ChangeNotifier {
     _instance.error = false;
     _instance.setBusy(true);
     try {
-      return await _studentService.addPreferredTeacherForStudent(teacherId, _student.id);
+      await _studentService.addPreferredTeacherForStudent(teacherId, _student.id);
+      return;
     } catch (error) {
       _instance.error = true;
       rethrow;

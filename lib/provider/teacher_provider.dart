@@ -43,6 +43,10 @@ class TeacherProvider extends ChangeNotifier {
     }
   }
 
+  void exit(){
+    window.localStorage.remove("teacher");
+  }
+
   Future<void> saveTeacher(SaveTeacherRequest teacherRequest) async {
     _instance.error = false;
     _instance.setBusy(true);

@@ -14,7 +14,7 @@ class SelectTeacherWidget extends StatefulWidget {
 
 class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
   List<Teacher> _teachers = List.empty(growable: true);
-  int _selectedIndex = 0;
+  int? _selectedIndex;
 
   @override
   void initState() {
@@ -25,6 +25,12 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
           .then((value) {
         _teachers = value;
       });
+      final teacher =
+          Provider.of<StudentProvider>(context, listen: false).student.teacher;
+      if (teacher != null) {
+        _selectedIndex =
+            _teachers.indexWhere((element) => element.id == teacher.id);
+      }
     });
   }
 
@@ -75,37 +81,36 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
     }
   }
 
-  Widget _buttonConfirmTeacher(){
+  Widget _buttonConfirmTeacher() {
     return ElevatedButton(
-      onPressed: () async {
-        try {
-          await Provider.of<StudentProvider>(context,
-              listen: false)
-              .addPreferredTeacherForStudent(
-              _teachers[_selectedIndex].id);
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
-          );
-          if (kDebugMode) {
-            print(e);
-          }
-        }
-      },
+      onPressed: _selectedIndex == null
+          ? null
+          : () async {
+              try {
+                await Provider.of<StudentProvider>(context, listen: false)
+                    .addPreferredTeacherForStudent(
+                        _teachers[_selectedIndex!].id);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Произошла ошибка"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                if (kDebugMode) {
+                  print(e);
+                }
+              }
+            },
       child: const Text("Подтвердить"),
     );
   }
 
-
-  Widget _buttonRefreshTeacher(){
+  Widget _buttonRefreshTeacher() {
     return ElevatedButton(
       onPressed: () async {
         try {
-          await Provider.of<TeacherProvider>(context,
-              listen: false)
+          await Provider.of<TeacherProvider>(context, listen: false)
               .getAllTeachers()
               .then((value) {
             _teachers = value;
