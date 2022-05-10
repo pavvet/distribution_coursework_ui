@@ -31,10 +31,25 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        key: _scaffoldKey,
-      ),
+      appBar: _buildAppBar(),
       body: _buildBody(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+        key: _scaffoldKey,
+        title: const Center(child: Text("Регистрация пользователя")),
+        leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                  constraints: const BoxConstraints.expand(width: 80, height: 80),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/auth");
+                  },
+                  icon: const Icon(Icons.arrow_back));
+            }
+        )
     );
   }
 

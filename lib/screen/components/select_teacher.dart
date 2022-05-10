@@ -60,50 +60,10 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
                     ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await Provider.of<TeacherProvider>(context, listen: false)
-                                .getAllTeachers()
-                                .then((value) {
-                              _teachers = value;
-                            });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-                        },
-                        child: const Text("Обновить"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await Provider.of<StudentProvider>(context,
-                                    listen: false)
-                                .addPreferredTeacherForStudent(
-                                    _teachers[_selectedIndex].id);
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-                        },
-                        child: const Text("Подтвердить"),
-                      ),
+                      _buttonRefreshTeacher(),
+                      _buttonConfirmTeacher()
                     ],
                   )
                 ],
@@ -115,20 +75,71 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
     }
   }
 
-  Widget _buildListItemTeacher(BuildContext context, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
+  Widget _buttonConfirmTeacher(){
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          await Provider.of<StudentProvider>(context,
+              listen: false)
+              .addPreferredTeacherForStudent(
+              _teachers[_selectedIndex].id);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        color: index == _selectedIndex ? Colors.blue : Colors.white60,
-        child: Center(
-            child: Text(_teachers[index].name!,
-                style: const TextStyle(fontSize: 20))),
+      child: const Text("Подтвердить"),
+    );
+  }
+
+
+  Widget _buttonRefreshTeacher(){
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          await Provider.of<TeacherProvider>(context,
+              listen: false)
+              .getAllTeachers()
+              .then((value) {
+            _teachers = value;
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Обновить"),
+    );
+  }
+
+  Widget _buildListItemTeacher(BuildContext context, int index) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ListTile(
+        onTap: () {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        textColor: index == _selectedIndex ? Colors.white : Colors.black,
+        tileColor: index == _selectedIndex ? Color(-14137996) : Colors.white60,
+        title: Center(
+          child: Text(_teachers[index].name!, style: TextStyle(fontSize: 20)),
+        ),
       ),
     );
   }

@@ -1,15 +1,11 @@
 import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/preference.dart';
 import 'package:distribution_coursework/model/request/save_coursework_request.dart';
-import 'package:distribution_coursework/model/request/save_student_request.dart';
-import 'package:distribution_coursework/model/request/save_teacher_request.dart';
 import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/preference_provider.dart';
-import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
 import 'package:distribution_coursework/screen/components/add_preference.dart';
-import 'package:distribution_coursework/screen/components/split_choice.dart';
 import 'package:distribution_coursework/screen/components/split_choice_teacher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -69,9 +65,7 @@ class _TeacherPageState extends State<TeacherPage> {
     final teacher = Provider.of<TeacherProvider>(context).teacher;
     if (teacher != null && teacher.isAuth()) {
       return Scaffold(
-        appBar: AppBar(
-          key: _scaffoldKey,
-        ),
+        appBar: _buildAppBar(),
         body: _buildBody(),
       );
     } else {
@@ -79,18 +73,33 @@ class _TeacherPageState extends State<TeacherPage> {
     }
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      key: _scaffoldKey,
+      title: const Center(child: Text("Личная страница преподавателя")),
+      leading: Builder(builder: (BuildContext context) {
+        return IconButton(
+            constraints: const BoxConstraints.expand(width: 80, height: 80),
+            onPressed: () {
+              Navigator.pushNamed(context, "/auth");
+            },
+            icon: const Icon(Icons.arrow_back));
+      }),
+    );
+  }
+
   Widget _buildBody() {
     return Row(
       children: [
         SizedBox(
-            width: MediaQuery.of(context).size.width / 4,
+            width: MediaQuery.of(context).size.width * 3 / 7,
             height: MediaQuery.of(context).size.height / 2,
             child: _buildTeacherCourseworks()),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width * 4 / 7,
               height: MediaQuery.of(context).size.height / 2,
               child: Column(
                 children: [
@@ -212,30 +221,36 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buttonCreateCoursework() {
+    final coursework =
+        Provider.of<CourseworkProvider>(context, listen: false).coursework;
     return ElevatedButton(
-      onPressed: () async {
-        try {
-          if (_formKey.currentState!.validate()) {
-            final teacher =
-                Provider.of<TeacherProvider>(context, listen: false).teacher!;
-            final request =
-                SaveCourseworkRequest(_nameTextController.text, teacher.id);
-            _courseworks.add(
-                await Provider.of<CourseworkProvider>(context, listen: false)
-                    .saveCoursework(request));
-          }
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
-          );
-          if (kDebugMode) {
-            print(e);
-          }
-        }
-      },
+      onPressed: coursework.id != null
+          ? null
+          : () async {
+              try {
+                if (_formKey.currentState!.validate()) {
+                  final teacher =
+                      Provider.of<TeacherProvider>(context, listen: false)
+                          .teacher!;
+                  final request = SaveCourseworkRequest(
+                      _nameTextController.text, teacher.id);
+                  _courseworks.add(await Provider.of<CourseworkProvider>(
+                          context,
+                          listen: false)
+                      .saveCoursework(request));
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Произошла ошибка"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                if (kDebugMode) {
+                  print(e);
+                }
+              }
+            },
       child: const Text("Создать"),
     );
   }
@@ -287,7 +302,10 @@ class _TeacherPageState extends State<TeacherPage> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const Divider(
+                      color: Colors.black,
+                    ),
                     itemCount: _courseworks.length,
                     itemBuilder: _buildListItemCourseworks,
                   ),
@@ -297,6 +315,7 @@ class _TeacherPageState extends State<TeacherPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Flexible(child: _buttonRefreshCourseworks()),
+                  Flexible(child: _buttonCreateCourseworks()),
                   Flexible(child: _buttonConfirmCourseworks())
                 ],
               )
@@ -329,6 +348,35 @@ class _TeacherPageState extends State<TeacherPage> {
         }
       },
       child: const Text("Обновить"),
+    );
+  }
+
+  Widget _buttonCreateCourseworks() {
+    final allPreference = Provider.of<PreferenceProvider>(context, listen: false).allPreference;
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          Provider.of<CourseworkProvider>(context, listen: false).coursework =
+              Coursework.empty();
+          _nameTextController.clear();
+          _preference = List.of(allPreference);
+          _selectedPreference!.clear();
+          setState(() {
+
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Новая"),
     );
   }
 
@@ -371,7 +419,8 @@ class _TeacherPageState extends State<TeacherPage> {
           _selectedIndex = index;
         });
       },
-      tileColor: index == _selectedIndex ? Colors.blue : Colors.white,
+      textColor: index == _selectedIndex ? Colors.white : Colors.black,
+      tileColor: index == _selectedIndex ? Color(-14137996) : Colors.white,
       title: Center(
         child: Text(_courseworks[index].name!,
             style: const TextStyle(fontSize: 20)),

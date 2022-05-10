@@ -23,6 +23,10 @@ class CourseworkProvider extends ChangeNotifier {
 
   Coursework _coursework = Coursework.empty();
 
+  set coursework(Coursework value) {
+    _coursework = value;
+  }
+
   Coursework get coursework => _coursework;
 
   bool _busy = false;

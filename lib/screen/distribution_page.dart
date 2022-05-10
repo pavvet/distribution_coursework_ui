@@ -22,6 +22,7 @@ class _DistributionPageState extends State<DistributionPage> {
 
   List<Coursework?> _courseworkResult = List.empty(growable: true);
   List<Student?> _studentsResult = List.empty(growable: true);
+  List<int?> _scoreResult = List.empty(growable: true);
 
   @override
   void initState() {
@@ -43,10 +44,25 @@ class _DistributionPageState extends State<DistributionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        key: _scaffoldKey,
-      ),
+      appBar: _buildAppBar(),
       body: _buildBody(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      key: _scaffoldKey,
+      title: const Center(child: Text("Распределение курсовых работ")),
+      leading: Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+              constraints: const BoxConstraints.expand(width: 80, height: 80),
+              onPressed: () {
+                Navigator.pushNamed(context, "/auth");
+              },
+              icon: const Icon(Icons.arrow_back));
+        }
+      )
     );
   }
 
@@ -65,124 +81,6 @@ class _DistributionPageState extends State<DistributionPage> {
                 child: _buildResultDistributionList())),
       ],
     );
-  }
-
-  Widget _buildResultDistributionList() {
-    final DistributionProvider distributionProvider =
-        Provider.of<DistributionProvider>(context);
-    if (distributionProvider.isBusy) {
-      return const CircularProgressIndicator();
-    } else {
-      return Card(
-        elevation: 20,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    const Text(
-                      "Студенты",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
-                          controller: ScrollController(),
-                          itemCount: _studentsResult.length,
-                          itemBuilder: _buildListItemStudentResult,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          await Provider.of<DistributionProvider>(context,
-                                  listen: false)
-                              .getResultDistribution()
-                              .then((List<PairStudentCoursework> value) {
-                            _studentsResult.clear();
-                            _courseworkResult.clear();
-                            for (var element in value) {
-                              _studentsResult.add(element.student);
-                              _courseworkResult.add(element.coursework);
-                            }
-                          });
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Произошла ошибка"),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          if (kDebugMode) {
-                            print(e);
-                          }
-                        }
-                      },
-                      child: const Text("Распределить"),
-                    ),
-                  ],
-                ),
-              ),
-              const VerticalDivider(
-                  thickness: 1, color: Colors.black, indent: 0, endIndent: 0),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Курсовые",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
-                          controller: ScrollController(),
-                          itemCount: _courseworkResult.length,
-                          itemBuilder: _buildListItemCourseworkResult,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          await Provider.of<CourseworkProvider>(context,
-                                  listen: false)
-                              .getAllCoursework()
-                              .then((List<Coursework> value) {
-                            _coursework = value;
-                          });
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Произошла ошибка"),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          if (kDebugMode) {
-                            print(e);
-                          }
-                        }
-                      },
-                      child: const Text("Обновить"),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    }
   }
 
   Widget _buildStudentsAndCourseworkList() {
@@ -206,8 +104,8 @@ class _DistributionPageState extends State<DistributionPage> {
                     const Text(
                       "Студенты",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Expanded(
                       child: Padding(
@@ -222,8 +120,7 @@ class _DistributionPageState extends State<DistributionPage> {
                     ElevatedButton(
                       onPressed: () async {
                         try {
-                          Provider.of<StudentProvider>(context,
-                                  listen: false)
+                          Provider.of<StudentProvider>(context, listen: false)
                               .getAllStudents()
                               .then((List<Student> value) {
                             _students = value;
@@ -246,10 +143,7 @@ class _DistributionPageState extends State<DistributionPage> {
                 ),
               ),
               const VerticalDivider(
-                  thickness: 1,
-                  color: Colors.black,
-                  indent: 0,
-                  endIndent: 0),
+                  thickness: 1, color: Colors.black, indent: 0, endIndent: 0),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -257,8 +151,8 @@ class _DistributionPageState extends State<DistributionPage> {
                     const Text(
                       "Курсовые",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Expanded(
                       child: Padding(
@@ -303,6 +197,130 @@ class _DistributionPageState extends State<DistributionPage> {
     }
   }
 
+  Widget _buildResultDistributionList() {
+    final DistributionProvider distributionProvider =
+        Provider.of<DistributionProvider>(context);
+    if (distributionProvider.isBusy) {
+      return const CircularProgressIndicator();
+    } else {
+      return Card(
+        elevation: 20,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    const Text(
+                      "Распределение",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                            color: Colors.black,
+                          ),
+                          controller: ScrollController(),
+                          itemCount: _studentsResult.length,
+                          itemBuilder: _buildListItemStudentResult,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          await Provider.of<DistributionProvider>(context,
+                                  listen: false)
+                              .getResultDistribution()
+                              .then((List<PairStudentCoursework> value) {
+                            _studentsResult.clear();
+                            _courseworkResult.clear();
+                            _scoreResult.clear();
+                            for (var element in value) {
+                              _studentsResult.add(element.student);
+                              _courseworkResult.add(element.coursework);
+                              _scoreResult.add(element.score);
+                            }
+                          });
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Произошла ошибка"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          if (kDebugMode) {
+                            print(e);
+                          }
+                        }
+                      },
+                      child: const Text("Распределить"),
+                    ),
+                  ],
+                ),
+              ),
+              /*const VerticalDivider(
+                  thickness: 1, color: Colors.black, indent: 0, endIndent: 0),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Курсовые",
+                      textAlign: TextAlign.center,
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          controller: ScrollController(),
+                          itemCount: _courseworkResult.length,
+                          itemBuilder: _buildListItemCourseworkResult,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          await Provider.of<CourseworkProvider>(context,
+                              listen: false)
+                              .getAllCoursework()
+                              .then((List<Coursework> value) {
+                            _coursework = value;
+                          });
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Произошла ошибка"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          if (kDebugMode) {
+                            print(e);
+                          }
+                        }
+                      },
+                      child: const Text("Обновить"),
+                    ),
+                  ],
+                ),
+              )*/
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   Widget _buildListItemCoursework(BuildContext context, int index) {
     return ListTile(
       title:
@@ -325,8 +343,28 @@ class _DistributionPageState extends State<DistributionPage> {
 
   Widget _buildListItemStudentResult(BuildContext context, int index) {
     return ListTile(
-      title: Text(_studentsResult[index]!.name!,
-          style: const TextStyle(fontSize: 20)),
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              _studentsResult[index]!.name!,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              _courseworkResult[index]!.name!,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              _scoreResult[index]!.toString(),
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

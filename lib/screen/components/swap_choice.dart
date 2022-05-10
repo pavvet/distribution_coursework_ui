@@ -134,69 +134,15 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            Provider.of<CourseworkProvider>(context,
-                                    listen: false)
-                                .getAllCoursework()
-                                .then((List<Coursework> value) {
-                              _courseworkList = value
-                                  .where((coursework) =>
-                                      !_selectedCourseworkList
-                                          .contains(coursework) &&
-                                      !_unselectedCourseworkList
-                                          .contains(coursework))
-                                  .toList();
-                            });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-                        },
-                        child: const Text("Обновить"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: _buttonRefreshCourseworks(),
                       ),
-                      Flexible(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              final student = Provider.of<StudentProvider>(
-                                      context,
-                                      listen: false)
-                                  .student;
-                              await Provider.of<CourseworkProvider>(context,
-                                      listen: false)
-                                  .addCourseworkForStudent(
-                                      _selectedCourseworkList
-                                          .map((e) => e.id)
-                                          .toList(),
-                                      _unselectedCourseworkList
-                                          .map((e) => e.id)
-                                          .toList(),
-                                      student.id);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Произошла ошибка"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              if (kDebugMode) {
-                                print(e);
-                              }
-                            }
-                          },
-                          child: const Text("Подтвердить"),
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: _buttonConfirmCourseworks(),
                       ),
                     ],
                   ),
@@ -208,6 +154,73 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
       );
     }
   }
+
+  Widget _buttonConfirmCourseworks(){
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          final student = Provider.of<StudentProvider>(
+              context,
+              listen: false)
+              .student;
+          await Provider.of<CourseworkProvider>(context,
+              listen: false)
+              .addCourseworkForStudent(
+              _selectedCourseworkList
+                  .map((e) => e.id)
+                  .toList(),
+              _unselectedCourseworkList
+                  .map((e) => e.id)
+                  .toList(),
+              student.id);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Подтвердить"),
+    );
+  }
+
+  Widget _buttonRefreshCourseworks(){
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          Provider.of<CourseworkProvider>(context,
+              listen: false)
+              .getAllCoursework()
+              .then((List<Coursework> value) {
+            _courseworkList = value
+                .where((coursework) =>
+            !_selectedCourseworkList
+                .contains(coursework) &&
+                !_unselectedCourseworkList
+                    .contains(coursework))
+                .toList();
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Произошла ошибка"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      },
+      child: const Text("Обновить"),
+    );
+  }
+
 
   Widget _buildListUnselectedItem(BuildContext context, int index) {
     return ListTile(

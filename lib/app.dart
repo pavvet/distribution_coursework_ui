@@ -58,7 +58,7 @@ class RootApp extends StatelessWidget {
               style: ButtonStyle(
                 textStyle:
                     MaterialStateProperty.all(const TextStyle(fontSize: 17)),
-                minimumSize: MaterialStateProperty.all(const Size(150, 45)),
+                minimumSize: MaterialStateProperty.all(const Size(100, 45)),
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
                     if (states.contains(MaterialState.disabled)) {

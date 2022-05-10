@@ -31,12 +31,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        key: _scaffoldKey,
-      ),
-      body: _buildBody(),
-    );
+    return _buildBody();
   }
 
   Widget _buildBody() {
@@ -100,76 +95,34 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              try {
-                                if (_formKey.currentState!.validate()) {
-                                  if (_status!.name == Status.student.name) {
-                                    final request = AuthStudentRequest(
-                                        _loginController.text,
-                                        _passwordController.text);
-                                    await Provider.of<StudentProvider>(context,
-                                        listen: false)
-                                        .authStudent(request);
-                                    Navigator.pushNamed(context, "/student");
-                                  } else {
-                                    final request = AuthTeacherRequest(
-                                        _loginController.text,
-                                        _passwordController.text);
-                                    await Provider.of<TeacherProvider>(context,
-                                        listen: false)
-                                        .authTeacher(request);
-                                    Navigator.pushNamed(context, "/teacher");
-                                  }
-                                }
-                              } on AuthStudentException catch (exception) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(exception.message())));
-                                if (kDebugMode) {
-                                  print(exception);
-                                }
-                              } on AuthTeacherException catch (exception) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(exception.message())));
-                                if (kDebugMode) {
-                                  print(exception);
-                                }
-                              } catch (exception) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text("Произошла ошибка")));
-                                if (kDebugMode) {
-                                  print(exception);
-                                }
-                              }
-                            },
-                            child: const Text("Войти"),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: _buttonEntry(),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, "/register");
-                              },
-                              child: const Text("Зарегистрироваться"),),
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: _buttonRegister(),
+                          ),
                         )
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/distribution");
-                      },
-                      child: const Text("Распределение"),),
+                    child: Row(
+                      children: [
+                        Expanded(child: _buttonDistribution()),
+                      ],
+                    ),
                   )
                 ],
               ),
@@ -177,6 +130,66 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buttonDistribution() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushNamed(context, "/distribution");
+      },
+      child: const Text("Распределение"),
+    );
+  }
+
+  Widget _buttonRegister() {
+    return ElevatedButton(
+        onPressed: () {
+          Navigator.pushNamed(context, "/register");
+        },
+        child: const Text("Зарегистрироваться"));
+  }
+
+  Widget _buttonEntry() {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          if (_formKey.currentState!.validate()) {
+            if (_status!.name == Status.student.name) {
+              final request = AuthStudentRequest(
+                  _loginController.text, _passwordController.text);
+              await Provider.of<StudentProvider>(context, listen: false)
+                  .authStudent(request);
+              Navigator.pushNamed(context, "/student");
+            } else {
+              final request = AuthTeacherRequest(
+                  _loginController.text, _passwordController.text);
+              await Provider.of<TeacherProvider>(context, listen: false)
+                  .authTeacher(request);
+              Navigator.pushNamed(context, "/teacher");
+            }
+          }
+        } on AuthStudentException catch (exception) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(exception.message())));
+          if (kDebugMode) {
+            print(exception);
+          }
+        } on AuthTeacherException catch (exception) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(exception.message())));
+          if (kDebugMode) {
+            print(exception);
+          }
+        } catch (exception) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Произошла ошибка")));
+          if (kDebugMode) {
+            print(exception);
+          }
+        }
+      },
+      child: const Text("Войти"),
     );
   }
 
