@@ -255,7 +255,7 @@ class _DistributionPageState extends State<DistributionPage> {
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Произошла ошибка"),
+                              content: Text("Ошибка при распределении"),
                               backgroundColor: Colors.red,
                             ),
                           );

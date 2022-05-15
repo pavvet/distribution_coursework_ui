@@ -85,6 +85,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     },
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Пароль'),
                     validator: (value) {

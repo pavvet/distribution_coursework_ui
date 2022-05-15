@@ -16,8 +16,6 @@ class NetworkUtil {
     _instance._client = client;
     return _instance;
   }
-
-  //final _storageUtil = StorageUtil();
   final _decoder = const JsonDecoder();
   var _client = http.Client();
   final _initialHeaders = {
@@ -27,9 +25,6 @@ class NetworkUtil {
 
   Future<dynamic> get(String url,
       {Map<String, String>? headers, timeout = DEFAULT_TIMEOUT}) async {
-    //url = replaceLocalUrl(url);
-    //Log.debug(text: "URL запроса: $url");
-
     return await _makeHttpCall(
         (Map<String, String> actualHeaders) => _client
             .get(Uri.tryParse(url)!, headers: actualHeaders)
@@ -43,9 +38,6 @@ class NetworkUtil {
       encoding,
       bool isAuthRequest = false,
       timeout = DEFAULT_TIMEOUT}) async {
-    //url = replaceLocalUrl(url);
-    //Log.debug(text: "URL запроса: $url");
-    //Log.debug(text: "Тело запроса: $body");
     return await _makeHttpCall(
         (Map<String, String> actualHeaders) => _client
             .post(Uri.tryParse(url)!,
@@ -60,9 +52,6 @@ class NetworkUtil {
         encoding,
         bool isAuthRequest = false,
         timeout = DEFAULT_TIMEOUT}) async {
-    //url = replaceLocalUrl(url);
-    //Log.debug(text: "URL запроса: $url");
-    //Log.debug(text: "Тело запроса: $body");
     return await _makeHttpCall(
             (Map<String, String> actualHeaders) =>
             _client.put(Uri.tryParse(url)!, body: body, headers: actualHeaders, encoding: encoding).timeout(timeout),
@@ -82,7 +71,7 @@ class NetworkUtil {
     final String res = utf8.decode(response.bodyBytes);
     final int statusCode = response.statusCode;
     if (statusCode < 200 || statusCode >= 400) {
-      throw Exception("Произошла ошибка при получении ответа от сервера c кодом $statusCode");
+      throw Exception("Ошибка $statusCode\n${utf8.decode(response.bodyBytes)}");
     }
     if (res.isEmpty) {
       return;
