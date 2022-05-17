@@ -30,8 +30,7 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
                 ),
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                    const Divider(
+                    separatorBuilder: (context, index) => const Divider(
                       color: Colors.black,
                     ),
                     controller: ScrollController(),
@@ -55,8 +54,7 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
                 ),
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                    const Divider(
+                    separatorBuilder: (context, index) => const Divider(
                       color: Colors.black,
                     ),
                     controller: ScrollController(),
@@ -80,8 +78,13 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
           widget.items!.removeAt(index);
         });
       },
-      title:
-      Center(child: Text(widget.items![index].name!, style: const TextStyle(fontSize: 20))),
+      title: Center(
+        child: Text(
+          widget.items![index].name!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
+        ),
+      ),
     );
   }
 
@@ -94,8 +97,11 @@ class _SplitChoiceTeacherState extends State<SplitChoiceTeacherWidget> {
         });
       },
       title: Center(
-        child: Text(widget.selectedItems![index].name!,
-            style: const TextStyle(fontSize: 20)),
+        child: Text(
+          widget.selectedItems![index].name!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }

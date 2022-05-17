@@ -71,7 +71,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                               Expanded(
                                 child: ListView.separated(
                                   separatorBuilder: (context, index) =>
-                                  const Divider(
+                                      const Divider(
                                     color: Colors.black,
                                   ),
                                   controller: ScrollController(),
@@ -100,7 +100,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                               Expanded(
                                 child: ListView.separated(
                                   separatorBuilder: (context, index) =>
-                                  const Divider(
+                                      const Divider(
                                     color: Colors.black,
                                   ),
                                   controller: ScrollController(),
@@ -203,8 +203,9 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
         });
       },
       title: Center(
-          child: Text(_preference[index].name!,
-              style: const TextStyle(fontSize: 20))),
+        child: Text(_preference[index].name!,
+            textAlign: TextAlign.center, style: const TextStyle(fontSize: 20)),
+      ),
     );
   }
 
@@ -218,6 +219,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
       },
       title: Center(
         child: Text(_selectedPreference[index].name!,
+            textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 20)),
       ),
     );

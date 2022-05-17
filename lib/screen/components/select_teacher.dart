@@ -146,7 +146,9 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
         textColor: index == _selectedIndex ? Colors.white : Colors.black,
         tileColor: index == _selectedIndex ? Color(-14137996) : Colors.white60,
         title: Center(
-          child: Text(_teachers[index].name!, style: TextStyle(fontSize: 20)),
+          child: Text(_teachers[index].name!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 20)),
         ),
       ),
     );

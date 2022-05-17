@@ -232,8 +232,11 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
         });
       },
       title: Center(
-        child: Text(_unselectedCourseworkList[index].name!,
-            style: const TextStyle(fontSize: 20)),
+        child: Text(
+          _unselectedCourseworkList[index].name!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
@@ -272,8 +275,11 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
           });
         },
         title: Center(
-          child: Text(_courseworkList[index].name!,
-              style: const TextStyle(fontSize: 20)),
+          child: Text(
+            _courseworkList[index].name!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
       ),
     );
@@ -288,8 +294,11 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
         });
       },
       title: Center(
-        child: Text(_selectedCourseworkList[index].name!,
-            style: const TextStyle(fontSize: 20)),
+        child: Text(
+          _selectedCourseworkList[index].name!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }

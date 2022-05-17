@@ -51,16 +51,49 @@ class _DistributionPageState extends State<DistributionPage> {
 
   AppBar _buildAppBar() {
     return AppBar(
-        key: _scaffoldKey,
-        title: const Center(child: Text("Распределение курсовых работ")),
-        leading: Builder(builder: (BuildContext context) {
+      key: _scaffoldKey,
+      title: const Center(child: Text("Распределение курсовых работ")),
+      leading: Builder(
+        builder: (BuildContext context) {
           return IconButton(
               constraints: const BoxConstraints.expand(width: 80, height: 80),
               onPressed: () {
                 Navigator.pushNamed(context, "/auth");
               },
               icon: const Icon(Icons.arrow_back));
-        }));
+        },
+      ),
+      actions: [
+        IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alertDialog();
+                },
+              );
+            },
+            icon: const Icon(Icons.help_outline_outlined))
+      ],
+    );
+  }
+
+  AlertDialog alertDialog() {
+    return AlertDialog(
+      title: const Text("Описание"),
+      content: const Text(
+          'Первые два столбца - списки студентов и курсовых работ.'
+          '\nКнопки "Обновить" - обновляют каждый из списков.'
+          '\n\nСписок "Распределение" - отображает результат распределения курсовых работ по студентам.'
+          '\nКнопка "Распределить" - запускает процесс распределения.'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Закрыть"))
+      ],
+    );
   }
 
   Widget _buildBody() {
@@ -69,12 +102,12 @@ class _DistributionPageState extends State<DistributionPage> {
         Center(
             child: SizedBox(
                 width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height * 8 / 10,
                 child: _buildStudentsAndCourseworkList())),
         Center(
             child: SizedBox(
                 width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height * 8 / 10,
                 child: _buildResultDistributionList())),
       ],
     );
@@ -294,18 +327,24 @@ class _DistributionPageState extends State<DistributionPage> {
       title: Row(
         children: [
           Expanded(
+            flex: 3,
             child: Text(
               _studentsResult[index]!.name!,
               style: const TextStyle(fontSize: 20),
             ),
           ),
           Expanded(
-            child: Text(
-              _courseworkResult[index]!.name!,
-              style: const TextStyle(fontSize: 20),
+            flex: 6,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                _courseworkResult[index]!.name!,
+                style: const TextStyle(fontSize: 20),
+              ),
             ),
           ),
           Expanded(
+            flex: 1,
             child: Text(
               _scoreResult[index]!.toString(),
               style: const TextStyle(fontSize: 20),

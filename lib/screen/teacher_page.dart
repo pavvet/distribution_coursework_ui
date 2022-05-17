@@ -86,6 +86,44 @@ class _TeacherPageState extends State<TeacherPage> {
             },
             icon: const Icon(Icons.arrow_back));
       }),
+      actions: [
+        IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alertDialog();
+                },
+              );
+            },
+            icon: const Icon(Icons.help_outline_outlined))
+      ],
+    );
+  }
+
+  AlertDialog alertDialog() {
+    return AlertDialog(
+      title: const Text("Описание"),
+      content: const Text(
+          'В столбце "Курсовые преподавателя" находится список курсовых, которые созданны данным преподавателем.'
+          '\nКнопка "Обновить" - обновляет данный список.'
+          '\nКнопка "Новая" - начинает создание новой курсовой работы.'
+          '\nКнопка "Подтвердить" - делает выделенную в списке курсовую работу в качестве текущей, то есть все изменения, будут применяться к ней.'
+          '\n\nВ поле "Название курсовой работы" нужно ввести название для создаваемого проекта.'
+          '\nЕсли поле оставить пустым, курсовую создать не получится.'
+          '\n\nСписок, состоящий из двух столбцов, отвечает за выбранные предпочтения, которые должны быть у студента для данной курсовой.'
+          '\nДанные слова должны описывать тему курсовой работы.'
+          '\nНажатие на элементы списка перемещает их из одного столбца в другой.'
+          '\nКнопка "Обновить" - обновляет список.'
+          '\nКнопка "Добавить" - добавляет новое слово в данный список.'
+          '\nКнопка "Подтвердить" - сохраняет сделанный выбор.'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Закрыть"))
+      ],
     );
   }
 
@@ -94,14 +132,14 @@ class _TeacherPageState extends State<TeacherPage> {
       children: [
         SizedBox(
             width: MediaQuery.of(context).size.width * 3 / 7,
-            height: MediaQuery.of(context).size.height / 2,
+            height: MediaQuery.of(context).size.height * 8 / 10,
             child: _buildTeacherCourseworks()),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width * 4 / 7,
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height * 8 / 10,
               child: Column(
                 children: [
                   _buildFieldForNameCoursework(),
@@ -361,7 +399,9 @@ class _TeacherPageState extends State<TeacherPage> {
           setState(() {
             _nameTextController.clear();
             _selectedPreference!.clear();
-            _preference = List.of(Provider.of<PreferenceProvider>(context, listen: false).allPreference);
+            _preference = List.of(
+                Provider.of<PreferenceProvider>(context, listen: false)
+                    .allPreference);
           });
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -421,8 +461,11 @@ class _TeacherPageState extends State<TeacherPage> {
       textColor: index == _selectedIndex ? Colors.white : Colors.black,
       tileColor: index == _selectedIndex ? Color(-14137996) : Colors.white,
       title: Center(
-        child: Text(_courseworks[index].name!,
-            style: const TextStyle(fontSize: 20)),
+        child: Text(
+          _courseworks[index].name!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
