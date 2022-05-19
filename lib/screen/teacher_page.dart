@@ -112,12 +112,14 @@ class _TeacherPageState extends State<TeacherPage> {
           '\nКнопка "Подтвердить" - делает выделенную в списке курсовую работу в качестве текущей, то есть все изменения, будут применяться к ней.'
           '\n\nВ поле "Название курсовой работы" нужно ввести название для создаваемого проекта.'
           '\nЕсли поле оставить пустым, курсовую создать не получится.'
+          '\n\nВ поле "Описание курсовой работы" нужно ввести описание создаваемого проекта.'
           '\n\nСписок, состоящий из двух столбцов, отвечает за выбранные предпочтения, которые должны быть у студента для данной курсовой.'
           '\nДанные слова должны описывать тему курсовой работы.'
           '\nНажатие на элементы списка перемещает их из одного столбца в другой.'
           '\nКнопка "Обновить" - обновляет список.'
           '\nКнопка "Добавить" - добавляет новое слово в данный список.'
-          '\nКнопка "Подтвердить" - сохраняет сделанный выбор.'),
+          '\nКнопка "Создать" - создаёт курсовую работу с указанными данными.'
+          '\nКнопка "Подтвердить" - подтверждает сделанные изменения в курсовой работе.'),
       actions: [
         TextButton(
             onPressed: () {
@@ -133,7 +135,7 @@ class _TeacherPageState extends State<TeacherPage> {
       child: Row(
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width *3/ 10,
+            width: MediaQuery.of(context).size.width * 3 / 10,
             height: MediaQuery.of(context).size.height * 8 / 10,
             child: _buildTeacherCourseworks(),
           ),
@@ -148,7 +150,7 @@ class _TeacherPageState extends State<TeacherPage> {
             ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width *4/ 10,
+            width: MediaQuery.of(context).size.width * 4 / 10,
             height: MediaQuery.of(context).size.height * 8 / 10,
             child: _buildPreferencesList(),
           ),
@@ -193,8 +195,7 @@ class _TeacherPageState extends State<TeacherPage> {
           controller: _descriptionTextController,
           style: const TextStyle(fontSize: 18, overflow: TextOverflow.clip),
           decoration: const InputDecoration(
-              labelText: "Описание курсовой работы",
-              border: InputBorder.none),
+              labelText: "Описание курсовой работы", border: InputBorder.none),
         ),
       ),
     );
@@ -297,8 +298,7 @@ class _TeacherPageState extends State<TeacherPage> {
                       _nameTextController.text,
                       teacher.id,
                       _descriptionTextController.text,
-                    preferences: _selectedPreference
-                  );
+                      preferences: _selectedPreference);
                   _courseworks.add(await Provider.of<CourseworkProvider>(
                           context,
                           listen: false)
@@ -329,7 +329,8 @@ class _TeacherPageState extends State<TeacherPage> {
           : () async {
               try {
                 await Provider.of<CourseworkProvider>(context, listen: false)
-                    .updateCoursework(_nameTextController.text, _descriptionTextController.text, _selectedPreference!);
+                    .updateCoursework(_nameTextController.text,
+                        _descriptionTextController.text, _selectedPreference!);
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

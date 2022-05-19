@@ -48,7 +48,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
       return Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width / 2,
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height * 8 / 10,
           child: Card(
             elevation: 20,
             child: Padding(
