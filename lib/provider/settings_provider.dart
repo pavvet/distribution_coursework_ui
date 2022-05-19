@@ -45,6 +45,10 @@ class SettingsProvider extends ChangeNotifier{
     return "http://localhost:8095/coursework/{courseworkId}";
   }
 
+  String get updateCourseworkUrl {
+    return "http://localhost:8095/coursework";
+  }
+
   String get getResultDistributionUrl {
     return "http://localhost:8095/distribution";
   }

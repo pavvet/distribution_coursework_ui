@@ -25,6 +25,7 @@ class _TeacherPageState extends State<TeacherPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
 
   int? _selectedIndex;
   Teacher? _teacher;
@@ -128,28 +129,31 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buildBody() {
-    return Row(
-      children: [
-        SizedBox(
-            width: MediaQuery.of(context).size.width * 3 / 7,
+    return Center(
+      child: Row(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width *3/ 10,
             height: MediaQuery.of(context).size.height * 8 / 10,
-            child: _buildTeacherCourseworks()),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 4 / 7,
-              height: MediaQuery.of(context).size.height * 8 / 10,
-              child: Column(
-                children: [
-                  _buildFieldForNameCoursework(),
-                  Expanded(child: _buildPreferencesList()),
-                ],
-              ),
+            child: _buildTeacherCourseworks(),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 3 / 10,
+            height: MediaQuery.of(context).size.height * 8 / 10,
+            child: Column(
+              children: [
+                _buildFieldForNameCoursework(),
+                Expanded(child: _buildFieldForDescriptionCoursework()),
+              ],
             ),
-          ],
-        ),
-      ],
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width *4/ 10,
+            height: MediaQuery.of(context).size.height * 8 / 10,
+            child: _buildPreferencesList(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -173,6 +177,24 @@ class _TeacherPageState extends State<TeacherPage> {
               return null;
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFieldForDescriptionCoursework() {
+    return Card(
+      elevation: 20,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: TextField(
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          controller: _descriptionTextController,
+          style: const TextStyle(fontSize: 18, overflow: TextOverflow.clip),
+          decoration: const InputDecoration(
+              labelText: "Описание курсовой работы",
+              border: InputBorder.none),
         ),
       ),
     );
@@ -272,7 +294,11 @@ class _TeacherPageState extends State<TeacherPage> {
                       Provider.of<TeacherProvider>(context, listen: false)
                           .teacher!;
                   final request = SaveCourseworkRequest(
-                      _nameTextController.text, teacher.id);
+                      _nameTextController.text,
+                      teacher.id,
+                      _descriptionTextController.text,
+                    preferences: _selectedPreference
+                  );
                   _courseworks.add(await Provider.of<CourseworkProvider>(
                           context,
                           listen: false)
@@ -303,7 +329,7 @@ class _TeacherPageState extends State<TeacherPage> {
           : () async {
               try {
                 await Provider.of<CourseworkProvider>(context, listen: false)
-                    .addPreferencesForCoursework(_selectedPreference!);
+                    .updateCoursework(_nameTextController.text, _descriptionTextController.text, _selectedPreference!);
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -398,6 +424,7 @@ class _TeacherPageState extends State<TeacherPage> {
               Coursework.empty();
           setState(() {
             _nameTextController.clear();
+            _descriptionTextController.clear();
             _selectedPreference!.clear();
             _preference = List.of(
                 Provider.of<PreferenceProvider>(context, listen: false)
@@ -429,6 +456,7 @@ class _TeacherPageState extends State<TeacherPage> {
                     .getCoursework(_courseworks[_selectedIndex!].id);
             _selectedPreference = _coursework.preferences;
             _nameTextController.text = _coursework.name!;
+            _descriptionTextController.text = _coursework.description ?? "";
             _preference = List.of(
                 Provider.of<PreferenceProvider>(context, listen: false)
                     .allPreference);

@@ -224,18 +224,30 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
   }
 
   Widget _buildListUnselectedItem(BuildContext context, int index) {
-    return ListTile(
-      onTap: () {
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (DismissDirection direction) {
         setState(() {
           _courseworkList.add(_unselectedCourseworkList[index]);
           _unselectedCourseworkList.removeAt(index);
         });
       },
-      title: Center(
-        child: Text(
-          _unselectedCourseworkList[index].name!,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20),
+      child: ListTile(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alertDialog(_unselectedCourseworkList[index]);
+            },
+          );
+        },
+        title: Center(
+          child: Text(
+            _unselectedCourseworkList[index].name!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
       ),
     );
@@ -269,10 +281,12 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
       ),
       child: ListTile(
         onTap: () {
-          setState(() {
-            _selectedCourseworkList.add(_courseworkList[index]);
-            _courseworkList.removeAt(index);
-          });
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alertDialog(_courseworkList[index]);
+            },
+          );
         },
         title: Center(
           child: Text(
@@ -286,20 +300,75 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
   }
 
   Widget _buildListSelectedItem(BuildContext context, int index) {
-    return ListTile(
-      onTap: () {
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.endToStart,
+      onDismissed: (DismissDirection direction) {
         setState(() {
           _courseworkList.add(_selectedCourseworkList[index]);
           _selectedCourseworkList.removeAt(index);
         });
       },
-      title: Center(
-        child: Text(
-          _selectedCourseworkList[index].name!,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20),
+      child: ListTile(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alertDialog(_selectedCourseworkList[index]);
+            },
+          );
+        },
+        title: Center(
+          child: Text(
+            _selectedCourseworkList[index].name!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
       ),
+    );
+  }
+
+  AlertDialog alertDialog(Coursework coursework) {
+    return AlertDialog(
+      title: Text(coursework.name.toString()),
+      content: Text.rich(
+        TextSpan(
+          children: [
+            const TextSpan(
+              text: "Преподаватель: ",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: coursework.teacher?.name.toString(),
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+            const TextSpan(
+              text: "\n\nКлючевые слова:\n",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: coursework.preferenceToString(),
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+            const TextSpan(
+              text: "\n\nОписание:\n",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: coursework.description.toString(),
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            )
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Закрыть"))
+      ],
     );
   }
 }

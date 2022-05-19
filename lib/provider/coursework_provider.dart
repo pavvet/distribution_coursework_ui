@@ -98,12 +98,15 @@ class CourseworkProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> addPreferencesForCoursework(List<Preference> preferences) async {
+  Future<void> updateCoursework(String name, String description, List<Preference> preferences) async {
     _instance.error = false;
     _instance.setBusy(true);
     try {
-      return await _preferenceService.addPreferencesForCoursework(
-          preferences, _instance._coursework.id);
+      _instance.coursework.name = name;
+      _instance.coursework.description = description;
+      _instance.coursework.preferences = preferences;
+      _instance.coursework = await _courseworkService.updateCoursework(coursework);
+      return;
     } catch (error) {
       _instance.error = true;
       rethrow;

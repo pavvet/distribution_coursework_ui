@@ -1,13 +1,8 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:distribution_coursework/exception/app_exception.dart';
 import 'package:distribution_coursework/model/coursework.dart';
-import 'package:distribution_coursework/model/request/auth_student_request.dart';
 import 'package:distribution_coursework/model/request/save_coursework_request.dart';
-import 'package:distribution_coursework/model/request/save_student_request.dart';
-import 'package:distribution_coursework/model/student.dart';
-import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/provider/settings_provider.dart';
 import 'package:distribution_coursework/util/network_util.dart';
 
@@ -39,7 +34,7 @@ class CourseworkService {
     List<Coursework> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
       responseItems = response
-          .map((coursework) => Coursework.shotInfoFromJson(coursework))
+          .map((coursework) => Coursework.fullInfoFromJson(coursework))
           .toList();
     }
     return responseItems;
@@ -62,5 +57,14 @@ class CourseworkService {
     await _netUtil.put(SettingsProvider()
         .addCourseworkForStudent
         .replaceAll("{studentId}", studentId.toString()), body: jsonEncode(request));
+  }
+
+  Future<Coursework> updateCoursework(Coursework coursework) async {
+    final response = await _netUtil.put(SettingsProvider()
+        .updateCourseworkUrl, body: jsonEncode(coursework.toMapWithTeacherId()));
+    if(response == null) {
+      throw SaveCourseworkException();
+    }
+    return Coursework.fullInfoFromJson(response);
   }
 }

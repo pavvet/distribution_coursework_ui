@@ -31,17 +31,6 @@ class PreferenceService {
         body: jsonEncode(request));
   }
 
-  Future<void> addPreferencesForCoursework(List<Preference> preferences,
-      int? courseworkId) async {
-    final request = {
-      "preferences": preferences.map((e) => e.toMap()).toList()
-    };
-    await _netUtil.put(
-        SettingsProvider().addPreferencesForCourseworkUrl.replaceAll(
-            "{courseworkId}", courseworkId.toString()),
-        body: jsonEncode(request));
-  }
-
   Future<List<Preference>> fetchAllPreference() async {
     final response = await _netUtil.get(SettingsProvider().getAllPreferenceUrl);
     List<Preference> responseItems = List.empty(growable: true);

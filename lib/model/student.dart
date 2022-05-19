@@ -38,13 +38,13 @@ class Student {
     selectedCoursework = <Coursework>[];
     if (obj["selectedCoursework"] != null) {
       obj["selectedCoursework"].forEach((coursework) {
-        selectedCoursework!.add(Coursework.shotInfoFromJson(coursework));
+        selectedCoursework!.add(Coursework.fullInfoFromJson(coursework));
       });
     }
     unselectedCoursework = <Coursework>[];
     if (obj["unselectedCoursework"] != null) {
       obj["unselectedCoursework"].forEach((coursework) {
-        unselectedCoursework!.add(Coursework.shotInfoFromJson(coursework));
+        unselectedCoursework!.add(Coursework.fullInfoFromJson(coursework));
       });
     }
     teacher = obj["teacher"] != null ? Teacher.fromJson(obj["teacher"]) : null;
