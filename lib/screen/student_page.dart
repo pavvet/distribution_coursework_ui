@@ -50,7 +50,7 @@ class _StudentPageState extends State<StudentPage> {
             constraints: const BoxConstraints.expand(width: 80, height: 80),
             onPressed: () {
               Provider.of<StudentProvider>(context, listen: false).exit();
-              Navigator.pushNamed(context, "/auth");
+              Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
             },
             icon: const Icon(Icons.arrow_back));
       }),
@@ -95,10 +95,6 @@ class _StudentPageState extends State<StudentPage> {
   }
 
   Widget _buildBody() {
-    final studentProvider = Provider.of<StudentProvider>(context);
-    if (studentProvider.isBusy) {
-      return const CircularProgressIndicator();
-    } else {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -116,6 +112,5 @@ class _StudentPageState extends State<StudentPage> {
           ),
         ],
       );
-    }
   }
 }

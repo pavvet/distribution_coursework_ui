@@ -168,6 +168,8 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                                       listen: false)
                                   .addPreferencesForStudent(
                                       _selectedPreference);
+                              await Provider.of<StudentProvider>(context, listen: false)
+                                  .getStudent();
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

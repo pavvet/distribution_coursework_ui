@@ -87,6 +87,19 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getStudent() async {
+    _instance.error = false;
+    _instance.setBusy(true);
+    try {
+      _instance._student = await _studentService.getInfoStudent(_instance.student.id!);
+    } catch (error) {
+      _instance.error = true;
+      rethrow;
+    } finally {
+      _instance.setBusy(false);
+    }
+  }
+
   Future<void> addPreferredTeacherForStudent(int? teacherId) async {
     _instance.error = false;
     _instance.setBusy(true);

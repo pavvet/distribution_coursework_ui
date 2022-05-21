@@ -1,6 +1,8 @@
 import 'package:distribution_coursework/exception/app_exception.dart';
+import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/request/auth_student_request.dart';
 import 'package:distribution_coursework/model/request/auth_teacher_request.dart';
+import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -100,7 +102,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: _buttonEntry(),
                           ),
                         ),
@@ -158,12 +161,16 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                   _loginController.text, _passwordController.text);
               await Provider.of<StudentProvider>(context, listen: false)
                   .authStudent(request);
+              Provider.of<CourseworkProvider>(context, listen: false)
+                  .coursework = Coursework.empty();
               Navigator.pushNamed(context, "/student");
             } else {
               final request = AuthTeacherRequest(
                   _loginController.text, _passwordController.text);
               await Provider.of<TeacherProvider>(context, listen: false)
                   .authTeacher(request);
+              Provider.of<CourseworkProvider>(context, listen: false).coursework =
+                  Coursework.empty();
               Navigator.pushNamed(context, "/teacher");
             }
           }

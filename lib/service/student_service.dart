@@ -43,6 +43,17 @@ class StudentService {
     return Student.fullInfoFromJson(response);
   }
 
+  Future<Student> getInfoStudent(int studentId) async {
+    final response = await _netUtil.get(SettingsProvider()
+        .getInfoStudentUrl
+        .replaceAll("{studentId}", studentId.toString()));
+    if(response == null) {
+      throw AuthStudentException();
+    }
+    window.localStorage["student"] = jsonEncode(response);
+    return Student.fullInfoFromJson(response);
+  }
+
   Future<void> addPreferredTeacherForStudent(
       int? teacherId, int? studentId) async {
     await _netUtil.put(SettingsProvider()

@@ -178,6 +178,8 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                   _selectedCourseworkList.map((e) => e.id).toList(),
                   _unselectedCourseworkList.map((e) => e.id).toList(),
                   student.id);
+          await Provider.of<StudentProvider>(context, listen: false)
+              .getStudent();
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

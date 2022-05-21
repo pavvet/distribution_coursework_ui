@@ -25,24 +25,25 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
           .then((value) {
         _teachers = value;
       });
-      final teacher =
+      Teacher? teacher = context.read<StudentProvider>().student.teacher;
+      _selectedIndex = _teachers.indexWhere((e) => e.id == teacher?.id);
+      /*final teacher =
           Provider.of<StudentProvider>(context, listen: false).student.teacher;
       if (teacher != null) {
         _selectedIndex =
             _teachers.indexWhere((element) => element.id == teacher.id);
-      }
+      }*/
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final TeacherProvider teacherProvider =
-        Provider.of<TeacherProvider>(context);
-    if (teacherProvider.isBusy) {
+    if (context.watch<TeacherProvider>().isBusy) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
+
       return Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width / 4,
@@ -93,6 +94,8 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
                 await Provider.of<StudentProvider>(context, listen: false)
                     .addPreferredTeacherForStudent(
                         _teachers[_selectedIndex!].id);
+                await Provider.of<StudentProvider>(context, listen: false)
+                    .getStudent();
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

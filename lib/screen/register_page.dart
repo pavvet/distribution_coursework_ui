@@ -45,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
               return IconButton(
                   constraints: const BoxConstraints.expand(width: 80, height: 80),
                   onPressed: () {
-                    Navigator.pushNamed(context, "/auth");
+                    Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
                   },
                   icon: const Icon(Icons.arrow_back));
             }

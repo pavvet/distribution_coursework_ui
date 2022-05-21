@@ -37,6 +37,7 @@ class _TeacherPageState extends State<TeacherPage> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = null;
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await Provider.of<TeacherProvider>(context, listen: false).init();
       _teacher = Provider.of<TeacherProvider>(context, listen: false).teacher;
@@ -83,7 +84,7 @@ class _TeacherPageState extends State<TeacherPage> {
             constraints: const BoxConstraints.expand(width: 80, height: 80),
             onPressed: () {
               Provider.of<TeacherProvider>(context, listen: false).exit();
-              Navigator.pushNamed(context, "/auth");
+              Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
             },
             icon: const Icon(Icons.arrow_back));
       }),
@@ -284,7 +285,7 @@ class _TeacherPageState extends State<TeacherPage> {
 
   Widget _buttonCreateCoursework() {
     final coursework =
-        Provider.of<CourseworkProvider>(context, listen: false).coursework;
+        Provider.of<CourseworkProvider>(context).coursework;
     return ElevatedButton(
       onPressed: coursework.id != null
           ? null

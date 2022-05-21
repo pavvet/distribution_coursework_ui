@@ -33,6 +33,10 @@ class SettingsProvider extends ChangeNotifier{
     return "http://localhost:8095/students";
   }
 
+  String get getInfoStudentUrl {
+    return "http://localhost:8095/student/{studentId}";
+  }
+
   String get getAllCourseworkUrl {
     return "http://localhost:8095/courseworks";
   }
