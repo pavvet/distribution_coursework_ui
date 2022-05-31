@@ -2,78 +2,78 @@ import 'package:flutter/material.dart';
 
 class SettingsProvider extends ChangeNotifier{
   String get registerStudentUrl {
-    return "http://localhost:8095/student";
+    return "https://test.pavelv.keenetic.link/student";
   }
 
   String get authStudentUrl {
-    return "http://localhost:8095/authStudent";
+    return "https://test.pavelv.keenetic.link/authStudent";
   }
 
   String get savePreferenceUrl {
-    return "http://localhost:8095/preference";
+    return "https://test.pavelv.keenetic.link/preference";
   }
 
   String get saveCourseworkUrl {
-    return "http://localhost:8095/coursework";
+    return "https://test.pavelv.keenetic.link/coursework";
   }
 
   String get registerTeacherUrl {
-    return "http://localhost:8095/teacher";
+    return "https://test.pavelv.keenetic.link/teacher";
   }
 
   String get authTeacherUrl {
-    return "http://localhost:8095/authTeacher";
+    return "https://test.pavelv.keenetic.link/authTeacher";
   }
 
   String get getAllTeacherUrl {
-    return "http://localhost:8095/teachers";
+    return "https://test.pavelv.keenetic.link/teachers";
   }
 
   String get getAllStudentsUrl {
-    return "http://localhost:8095/students";
+    return "https://test.pavelv.keenetic.link/students";
   }
 
   String get getInfoStudentUrl {
-    return "http://localhost:8095/student/{studentId}";
+    return "https://test.pavelv.keenetic.link/student/{studentId}";
   }
 
   String get getAllCourseworkUrl {
-    return "http://localhost:8095/courseworks";
+    return "https://test.pavelv.keenetic.link/courseworks";
   }
 
   String get getCourseworksForTeacherUrl {
-    return "http://localhost:8095/teacher/{teacherId}/courseworks";
+    return "https://test.pavelv.keenetic.link/teacher/{teacherId}/courseworks";
   }
 
   String get getCourseworkUrl {
-    return "http://localhost:8095/coursework/{courseworkId}";
+    return "https://test.pavelv.keenetic.link/coursework/{courseworkId}";
   }
 
   String get updateCourseworkUrl {
-    return "http://localhost:8095/coursework";
+    return "https://test.pavelv.keenetic.link/coursework";
   }
 
   String get getResultDistributionUrl {
-    return "http://localhost:8095/distribution";
+    return "https://test.pavelv.keenetic.link/distribution";
   }
 
   String get getAllPreferenceUrl {
-    return "http://localhost:8095/preferences";
+    return "https://test.pavelv.keenetic.link/preferences";
   }
 
   String get addPreferredTeacherForStudentUrl {
-    return "http://localhost:8095/student/{studentId}/preferredTeacher/{teacherId}";
+    return "https://test.pavelv.keenetic.link/student/{studentId}/preferredTeacher/{teacherId}";
   }
 
   String get addCourseworkForStudent {
-    return "http://localhost:8095/student/{studentId}/coursework";
+    return "https://test.pavelv.keenetic.link/student/{studentId}/coursework";
   }
 
   String get addPreferencesForStudentUrl {
-    return "http://localhost:8095/student/{studentId}/preferences";
+    return "https://test.pavelv.keenetic.link/student/{studentId}/preferences";
   }
 
   String get addPreferencesForCourseworkUrl {
-    return "http://localhost:8095/coursework/{courseworkId}/preferences";
+    return "https://test.pavelv.keenetic.link/coursework/{courseworkId}/preferences";
   }
 }
