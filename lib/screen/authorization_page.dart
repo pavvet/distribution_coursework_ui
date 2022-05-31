@@ -5,6 +5,7 @@ import 'package:distribution_coursework/model/request/auth_teacher_request.dart'
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -175,20 +176,29 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             }
           }
         } on AuthStudentException catch (exception) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(exception.message())));
+          CustomScaffoldMessenger.build(
+            text: exception.message(),
+            isGreen: false,
+            context: context,
+          );
           if (kDebugMode) {
             print(exception);
           }
         } on AuthTeacherException catch (exception) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(exception.message())));
+          CustomScaffoldMessenger.build(
+            text: exception.message(),
+            isGreen: false,
+            context: context,
+          );
           if (kDebugMode) {
             print(exception);
           }
         } catch (exception) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Произошла ошибка")));
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
+          );
           if (kDebugMode) {
             print(exception);
           }

@@ -1,6 +1,7 @@
 import 'package:distribution_coursework/model/teacher.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,12 +28,6 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
       });
       Teacher? teacher = context.read<StudentProvider>().student.teacher;
       _selectedIndex = _teachers.indexWhere((e) => e.id == teacher?.id);
-      /*final teacher =
-          Provider.of<StudentProvider>(context, listen: false).student.teacher;
-      if (teacher != null) {
-        _selectedIndex =
-            _teachers.indexWhere((element) => element.id == teacher.id);
-      }*/
     });
   }
 
@@ -43,7 +38,6 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
         child: CircularProgressIndicator(),
       );
     } else {
-
       return Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width / 4,
@@ -96,12 +90,16 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
                         _teachers[_selectedIndex!].id);
                 await Provider.of<StudentProvider>(context, listen: false)
                     .getStudent();
+                CustomScaffoldMessenger.build(
+                  text: "Преподаватель выбран",
+                  isGreen: true,
+                  context: context,
+                );
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Произошла ошибка"),
-                    backgroundColor: Colors.red,
-                  ),
+                CustomScaffoldMessenger.build(
+                  text: "Произошла ошибка",
+                  isGreen: false,
+                  context: context,
                 );
                 if (kDebugMode) {
                   print(e);
@@ -121,13 +119,13 @@ class _SelectTeacherWidgetState extends State<SelectTeacherWidget> {
               .then((value) {
             _teachers = value;
           });
+          CustomScaffoldMessenger.build(
+              text: "Список преподавателей обновлён",
+              isGreen: true,
+              context: context);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
-          );
+          CustomScaffoldMessenger.build(
+              text: "Произошла ошибка", isGreen: false, context: context);
           if (kDebugMode) {
             print(e);
           }

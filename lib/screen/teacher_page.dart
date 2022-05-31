@@ -7,6 +7,7 @@ import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
 import 'package:distribution_coursework/screen/components/add_preference.dart';
 import 'package:distribution_coursework/screen/components/split_choice_teacher.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -250,12 +251,16 @@ class _TeacherPageState extends State<TeacherPage> {
                   .toList();
             },
           );
+          CustomScaffoldMessenger.build(
+            text: "Список компетенций обновлён",
+            isGreen: true,
+            context: context,
+          );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
           );
           if (kDebugMode) {
             print(e);
@@ -304,13 +309,17 @@ class _TeacherPageState extends State<TeacherPage> {
                           context,
                           listen: false)
                       .saveCoursework(request));
+                  CustomScaffoldMessenger.build(
+                    text: "Курсовой проект успешно создан",
+                    isGreen: true,
+                    context: context,
+                  );
                 }
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Произошла ошибка"),
-                    backgroundColor: Colors.red,
-                  ),
+                CustomScaffoldMessenger.build(
+                  text: "Произошла ошибка",
+                  isGreen: false,
+                  context: context,
                 );
                 if (kDebugMode) {
                   print(e);
@@ -332,12 +341,16 @@ class _TeacherPageState extends State<TeacherPage> {
                 await Provider.of<CourseworkProvider>(context, listen: false)
                     .updateCoursework(_nameTextController.text,
                         _descriptionTextController.text, _selectedPreference!);
+                CustomScaffoldMessenger.build(
+                  text: "Компетенции назначены курсовому проекту",
+                  isGreen: true,
+                  context: context,
+                );
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Произошла ошибка"),
-                    backgroundColor: Colors.red,
-                  ),
+                CustomScaffoldMessenger.build(
+                  text: "Произошла ошибка",
+                  isGreen: false,
+                  context: context,
                 );
                 if (kDebugMode) {
                   print(e);
@@ -402,12 +415,16 @@ class _TeacherPageState extends State<TeacherPage> {
               .then((List<Coursework> value) {
             _courseworks = value;
           });
+          CustomScaffoldMessenger.build(
+            text: "Список курсовых проектов успешно обновлён",
+            isGreen: true,
+            context: context,
+          );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
           );
           if (kDebugMode) {
             print(e);
@@ -432,12 +449,16 @@ class _TeacherPageState extends State<TeacherPage> {
                 Provider.of<PreferenceProvider>(context, listen: false)
                     .allPreference);
           });
+          CustomScaffoldMessenger.build(
+            text: "Началось создание нового курсового проекта",
+            isGreen: true,
+            context: context,
+          );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
           );
           if (kDebugMode) {
             print(e);
@@ -465,12 +486,16 @@ class _TeacherPageState extends State<TeacherPage> {
             _preference.removeWhere(
                 (preference) => _selectedPreference!.contains(preference));
           }
+          CustomScaffoldMessenger.build(
+            text: "Курсовой проект успешно выбран для редактирования",
+            isGreen: true,
+            context: context,
+          );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
           );
           if (kDebugMode) {
             print(e);

@@ -1,7 +1,7 @@
 import 'package:distribution_coursework/model/preference.dart';
-import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/preference_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -120,7 +120,7 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                       ElevatedButton(
                         onPressed: () async {
                           try {
-                            Provider.of<PreferenceProvider>(context,
+                            await Provider.of<PreferenceProvider>(context,
                                     listen: false)
                                 .getAllPreference()
                                 .then((List<Preference> value) {
@@ -129,12 +129,16 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                                       !_selectedPreference.contains(preference))
                                   .toList();
                             });
+                            CustomScaffoldMessenger.build(
+                              text: "Список предпочтений успешно обновлён",
+                              isGreen: true,
+                              context: context,
+                            );
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Произошла ошибка"),
-                                backgroundColor: Colors.red,
-                              ),
+                            CustomScaffoldMessenger.build(
+                              text: "Произошла ошибка",
+                              isGreen: false,
+                              context: context,
                             );
                             if (kDebugMode) {
                               print(e);
@@ -170,12 +174,16 @@ class _SplitChoiceStudentState extends State<SplitChoiceStudentWidget> {
                                       _selectedPreference);
                               await Provider.of<StudentProvider>(context, listen: false)
                                   .getStudent();
+                              CustomScaffoldMessenger.build(
+                                text: "Предпочтения успешно выбраны",
+                                isGreen: true,
+                                context: context,
+                              );
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Произошла ошибка"),
-                                  backgroundColor: Colors.red,
-                                ),
+                              CustomScaffoldMessenger.build(
+                                text: "Произошла ошибка",
+                                isGreen: false,
+                                context: context,
                               );
                               if (kDebugMode) {
                                 print(e);

@@ -1,4 +1,5 @@
 import 'package:distribution_coursework/provider/preference_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,10 +57,18 @@ class AddPreferenceWidget extends StatelessWidget {
                         .savePreference(preferenceName);
                     await onTap!();
                     Navigator.of(context).pop();
+                    CustomScaffoldMessenger.build(
+                      text: "Ключевое слово успешно добавлено в список",
+                      isGreen: true,
+                      context: context,
+                    );
                   }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Произошла ошибка")));
+                  CustomScaffoldMessenger.build(
+                    text: "Произошла ошибка",
+                    isGreen: false,
+                    context: context,
+                  );
                   if (kDebugMode) {
                     print(e);
                   }

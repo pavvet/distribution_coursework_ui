@@ -4,6 +4,7 @@ import 'package:distribution_coursework/model/student.dart';
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/distribution_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -153,17 +154,21 @@ class _DistributionPageState extends State<DistributionPage> {
                     ElevatedButton(
                       onPressed: () async {
                         try {
-                          Provider.of<StudentProvider>(context, listen: false)
+                          await Provider.of<StudentProvider>(context, listen: false)
                               .getAllStudents()
                               .then((List<Student> value) {
                             _students = value;
                           });
+                          CustomScaffoldMessenger.build(
+                            text: "Список студентов успешно обновлён",
+                            isGreen: true,
+                            context: context,
+                          );
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Произошла ошибка"),
-                              backgroundColor: Colors.red,
-                            ),
+                          CustomScaffoldMessenger.build(
+                            text: "Произошла ошибка",
+                            isGreen: false,
+                            context: context,
                           );
                           if (kDebugMode) {
                             print(e);
@@ -209,12 +214,16 @@ class _DistributionPageState extends State<DistributionPage> {
                               .then((List<Coursework> value) {
                             _coursework = value;
                           });
+                          CustomScaffoldMessenger.build(
+                            text: "Список курсовых проектов успешно обновлён",
+                            isGreen: true,
+                            context: context,
+                          );
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Произошла ошибка"),
-                              backgroundColor: Colors.red,
-                            ),
+                          CustomScaffoldMessenger.build(
+                            text: "Произошла ошибка",
+                            isGreen: false,
+                            context: context,
                           );
                           if (kDebugMode) {
                             print(e);
@@ -286,11 +295,10 @@ class _DistributionPageState extends State<DistributionPage> {
                             }
                           });
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Ошибка при распределении"),
-                              backgroundColor: Colors.red,
-                            ),
+                          CustomScaffoldMessenger.build(
+                            text: "Произошла ошибка",
+                            isGreen: false,
+                            context: context,
                           );
                           if (kDebugMode) {
                             print(e);

@@ -1,6 +1,7 @@
 import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -180,12 +181,16 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                   student.id);
           await Provider.of<StudentProvider>(context, listen: false)
               .getStudent();
+          CustomScaffoldMessenger.build(
+            text: "Курсовые проекты успешно выбраны",
+            isGreen: true,
+            context: context,
+          );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
           );
           if (kDebugMode) {
             print(e);
@@ -200,7 +205,7 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
     return ElevatedButton(
       onPressed: () async {
         try {
-          Provider.of<CourseworkProvider>(context, listen: false)
+          await Provider.of<CourseworkProvider>(context, listen: false)
               .getAllCoursework()
               .then((List<Coursework> value) {
             _courseworkList = value
@@ -209,12 +214,16 @@ class _SwapChoiceState extends State<SwapChoiceWidget> {
                     !_unselectedCourseworkList.contains(coursework))
                 .toList();
           });
+          CustomScaffoldMessenger.build(
+            text: "Список курсовых проектов успешно обновлен",
+            isGreen: true,
+            context: context,
+          );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Произошла ошибка"),
-              backgroundColor: Colors.red,
-            ),
+          CustomScaffoldMessenger.build(
+            text: "Произошла ошибка",
+            isGreen: false,
+            context: context,
           );
           if (kDebugMode) {
             print(e);

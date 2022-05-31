@@ -1,8 +1,11 @@
 import 'package:distribution_coursework/exception/app_exception.dart';
+import 'package:distribution_coursework/model/coursework.dart';
 import 'package:distribution_coursework/model/request/save_student_request.dart';
 import 'package:distribution_coursework/model/request/save_teacher_request.dart';
+import 'package:distribution_coursework/provider/coursework_provider.dart';
 import 'package:distribution_coursework/provider/student_provider.dart';
 import 'package:distribution_coursework/provider/teacher_provider.dart';
+import 'package:distribution_coursework/util/scaffold_messenger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -145,35 +148,34 @@ class _RegisterPageState extends State<RegisterPage> {
                               await Provider.of<TeacherProvider>(context,
                                       listen: false)
                                   .saveTeacher(request);
+                              Provider.of<CourseworkProvider>(context, listen: false).coursework =
+                                  Coursework.empty();
                               Navigator.pushNamed(context, "/teacher");
                             }
                           }
                         } on SaveStudentException catch (exception) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(exception.message()),
-                              backgroundColor: Colors.red,
-                            ),
+                          CustomScaffoldMessenger.build(
+                            text: exception.message(),
+                            isGreen: false,
+                            context: context,
                           );
                           if (kDebugMode) {
                             print(exception);
                           }
                         } on SaveTeacherException catch (exception) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(exception.message()),
-                              backgroundColor: Colors.red,
-                            ),
+                          CustomScaffoldMessenger.build(
+                            text: exception.message(),
+                            isGreen: false,
+                            context: context,
                           );
                           if (kDebugMode) {
                             print(exception);
                           }
                         } catch (exception) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Произошла ошибка"),
-                              backgroundColor: Colors.red,
-                            ),
+                          CustomScaffoldMessenger.build(
+                            text: "Произошла ошибка",
+                            isGreen: false,
+                            context: context,
                           );
                           if (kDebugMode) {
                             print(exception);
