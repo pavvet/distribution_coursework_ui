@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildBody() {
     return Center(
       child: SizedBox(
-        width: MediaQuery.of(context).size.width / 4,
+        width: MediaQuery.of(context).size.width / 3,
         height: MediaQuery.of(context).size.height / 2,
         child: Card(
           elevation: 20,
