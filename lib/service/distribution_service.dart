@@ -20,7 +20,7 @@ class DistributionService {
     List<PairStudentCoursework> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
       responseItems = response
-          .map((pair) => PairStudentCoursework.fromJson(pair))
+          .map((pair) => PairStudentCoursework.fromJsonFull(pair))
           .toList();
     }
     return responseItems;

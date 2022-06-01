@@ -59,7 +59,8 @@ class _DistributionPageState extends State<DistributionPage> {
           return IconButton(
               constraints: const BoxConstraints.expand(width: 80, height: 80),
               onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/auth", (route) => false);
               },
               icon: const Icon(Icons.arrow_back));
         },
@@ -154,7 +155,8 @@ class _DistributionPageState extends State<DistributionPage> {
                     ElevatedButton(
                       onPressed: () async {
                         try {
-                          await Provider.of<StudentProvider>(context, listen: false)
+                          await Provider.of<StudentProvider>(context,
+                                  listen: false)
                               .getAllStudents()
                               .then((List<Student> value) {
                             _students = value;
@@ -331,6 +333,16 @@ class _DistributionPageState extends State<DistributionPage> {
   }
 
   Widget _buildListItemDistributionResult(BuildContext context, int index) {
+    Color color = Colors.yellow;
+    if (_studentsResult[index]!
+        .selectedCoursework!
+        .any((element) => element.id == _courseworkResult[index]!.id)) {
+      color = Colors.green;
+    } else if (_studentsResult[index]!
+        .unselectedCoursework!
+        .any((element) => element.id == _courseworkResult[index]!.id)) {
+      color = Colors.red;
+    }
     return ListTile(
       title: Row(
         children: [
@@ -358,6 +370,11 @@ class _DistributionPageState extends State<DistributionPage> {
               style: const TextStyle(fontSize: 20),
             ),
           ),
+          Container(
+            height: 10,
+            width: 10,
+            color: color,
+          )
         ],
       ),
     );

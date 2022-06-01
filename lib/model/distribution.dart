@@ -13,7 +13,7 @@ class Distribution {
     distribution = [];
     if (obj["distribution"] != null) {
       obj["distribution"].forEach((result) {
-        distribution!.add(PairStudentCoursework.fromJson(result));
+        distribution!.add(PairStudentCoursework.fromJsonShort(result));
       });
     }
   }

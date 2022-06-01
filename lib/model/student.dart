@@ -7,8 +7,8 @@ class Student {
   String? name;
   List<Preference>? preferences;
   Teacher? teacher;
-  List<Coursework>? selectedCoursework;
-  List<Coursework>? unselectedCoursework;
+  List<Coursework>? selectedCoursework = <Coursework>[];
+  List<Coursework>? unselectedCoursework  = <Coursework>[];
   
 
   Student(this.name);
