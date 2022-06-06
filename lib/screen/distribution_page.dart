@@ -53,7 +53,7 @@ class _DistributionPageState extends State<DistributionPage> {
   AppBar _buildAppBar() {
     return AppBar(
       key: _scaffoldKey,
-      title: const Center(child: Text("Распределение курсовых работ")),
+      title: const Center(child: Text("Распределение курсовых проектов")),
       leading: Builder(
         builder: (BuildContext context) {
           return IconButton(
@@ -84,9 +84,9 @@ class _DistributionPageState extends State<DistributionPage> {
     return AlertDialog(
       title: const Text("Описание"),
       content: const Text(
-          'Первые два столбца - списки студентов и курсовых работ.'
+          'Первые два столбца - списки студентов и курсовых проектов.'
           '\nКнопки "Обновить" - обновляют каждый из списков.'
-          '\n\nСписок "Распределение" - отображает результат распределения курсовых работ по студентам.'
+          '\n\nСписок "Распределение" - отображает результат распределения курсовых проектов по студентам.'
           '\nКнопка "Распределить" - запускает процесс распределения.'),
       actions: [
         TextButton(

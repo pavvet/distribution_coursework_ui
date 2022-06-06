@@ -6,7 +6,7 @@ class SaveStudentException implements Exception {
 
 class SaveCourseworkException implements Exception {
   String message() {
-    return "Не удалось сохранить курсовую работу";
+    return "Не удалось сохранить курсовой проект";
   }
 }
 

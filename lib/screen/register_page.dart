@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Center(
       child: SizedBox(
         width: MediaQuery.of(context).size.width / 3,
-        height: MediaQuery.of(context).size.height / 2,
+        height: MediaQuery.of(context).size.height / 1.8,
         child: Card(
           elevation: 20,
           child: Padding(
