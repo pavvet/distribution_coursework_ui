@@ -10,14 +10,12 @@ import 'package:provider/provider.dart';
 enum Status { student, teacher }
 
 class UnauthorizedPage extends StatelessWidget {
-
   const UnauthorizedPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: _buildBody(context),
     );
   }

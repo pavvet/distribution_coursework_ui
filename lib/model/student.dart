@@ -9,8 +9,6 @@ class Student {
   Teacher? teacher;
   List<Coursework>? selectedCoursework = <Coursework>[];
   List<Coursework>? unselectedCoursework  = <Coursework>[];
-  
-
   Student(this.name);
 
   Student.empty()

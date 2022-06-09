@@ -1,7 +1,6 @@
 class Teacher {
   int? id;
   String? name;
-
   Teacher(this.name);
 
   Teacher.empty()

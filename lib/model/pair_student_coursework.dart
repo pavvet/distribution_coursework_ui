@@ -5,7 +5,6 @@ class PairStudentCoursework {
   Student? student;
   Coursework? coursework;
   int? score;
-
   PairStudentCoursework(this.student, this.coursework);
 
   PairStudentCoursework.empty()

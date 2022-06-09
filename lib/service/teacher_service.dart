@@ -20,7 +20,6 @@ class TeacherService {
     }
     window.localStorage["teacher"] = jsonEncode(response);
     return Teacher.fromJson(response);
-
   }
 
   Future<Teacher> authTeacher(AuthTeacherRequest teacher) async {
@@ -37,9 +36,8 @@ class TeacherService {
     final response = await _netUtil.get(SettingsProvider().getAllTeacherUrl);
     List<Teacher> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
-      responseItems = response
-          .map((teacher) => Teacher.fromJson(teacher))
-          .toList();
+      responseItems =
+          response.map((teacher) => Teacher.fromJson(teacher)).toList();
     }
     return responseItems;
   }

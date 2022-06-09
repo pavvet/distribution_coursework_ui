@@ -85,5 +85,4 @@ class TeacherProvider extends ChangeNotifier {
       _instance.setBusy(false);
     }
   }
-
 }

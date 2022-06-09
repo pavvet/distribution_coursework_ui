@@ -7,7 +7,6 @@ class Coursework {
   String? description;
   List<Preference>? preferences;
   Teacher? teacher;
-
   Coursework(this.name);
 
   Coursework.empty()

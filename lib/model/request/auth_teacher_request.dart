@@ -1,8 +1,6 @@
 class AuthTeacherRequest {
   String login;
   String password;
-
-
   AuthTeacherRequest(this.login, this.password);
 
   Map<String, dynamic> toMap() {

@@ -50,7 +50,8 @@ class _StudentPageState extends State<StudentPage> {
             constraints: const BoxConstraints.expand(width: 80, height: 80),
             onPressed: () {
               Provider.of<StudentProvider>(context, listen: false).exit();
-              Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, "/auth", (route) => false);
             },
             icon: const Icon(Icons.arrow_back));
       }),
@@ -95,22 +96,22 @@ class _StudentPageState extends State<StudentPage> {
   }
 
   Widget _buildBody() {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            _student != null ? _student!.name! : "",
-            style: const TextStyle(fontSize: 40),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Expanded(flex: 1, child: SelectTeacherWidget()),
-              Expanded(flex: 3, child: SwapChoiceWidget()),
-              Expanded(flex: 2, child: SplitChoiceStudentWidget()),
-            ],
-          ),
-        ],
-      );
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          _student != null ? _student!.name! : "",
+          style: const TextStyle(fontSize: 40),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: const [
+            Expanded(flex: 1, child: SelectTeacherWidget()),
+            Expanded(flex: 3, child: SwapChoiceWidget()),
+            Expanded(flex: 2, child: SplitChoiceStudentWidget()),
+          ],
+        ),
+      ],
+    );
   }
 }

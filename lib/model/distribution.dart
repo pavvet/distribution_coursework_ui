@@ -2,8 +2,6 @@ import 'package:distribution_coursework/model/pair_student_coursework.dart';
 
 class Distribution {
   List<PairStudentCoursework>? distribution;
-
-
   Distribution(this.distribution);
 
   Distribution.empty()

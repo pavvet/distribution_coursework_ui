@@ -21,8 +21,8 @@ class PreferenceService {
     return Preference.fromJson(response);
   }
 
-  Future<void> addPreferencesForStudent(List<Preference> preferences,
-      int? studentId) async {
+  Future<void> addPreferencesForStudent(
+      List<Preference> preferences, int? studentId) async {
     final request = {"preferences": preferences.map((e) => e.toMap()).toList()};
     await _netUtil.put(
         SettingsProvider()

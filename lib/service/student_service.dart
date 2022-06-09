@@ -15,7 +15,7 @@ class StudentService {
   Future<Student> saveStudent(SaveStudentRequest student) async {
     final response = await _netUtil.post(SettingsProvider().registerStudentUrl,
         body: jsonEncode(student.toMap()));
-    if(response == null) {
+    if (response == null) {
       throw SaveStudentException();
     }
     window.localStorage["student"] = jsonEncode(response);
@@ -26,9 +26,8 @@ class StudentService {
     final response = await _netUtil.get(SettingsProvider().getAllStudentsUrl);
     List<Student> responseItems = List.empty(growable: true);
     if ((response as List).isNotEmpty) {
-      responseItems = response
-          .map((student) => Student.fullInfoFromJson(student))
-          .toList();
+      responseItems =
+          response.map((student) => Student.fullInfoFromJson(student)).toList();
     }
     return responseItems;
   }
@@ -36,7 +35,7 @@ class StudentService {
   Future<Student> authStudent(AuthStudentRequest student) async {
     final response = await _netUtil.post(SettingsProvider().authStudentUrl,
         body: jsonEncode(student.toMap()));
-    if(response == null) {
+    if (response == null) {
       throw AuthStudentException();
     }
     window.localStorage["student"] = jsonEncode(response);
@@ -47,7 +46,7 @@ class StudentService {
     final response = await _netUtil.get(SettingsProvider()
         .getInfoStudentUrl
         .replaceAll("{studentId}", studentId.toString()));
-    if(response == null) {
+    if (response == null) {
       throw AuthStudentException();
     }
     window.localStorage["student"] = jsonEncode(response);

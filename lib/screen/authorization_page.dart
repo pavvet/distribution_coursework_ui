@@ -170,8 +170,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                   _loginController.text, _passwordController.text);
               await Provider.of<TeacherProvider>(context, listen: false)
                   .authTeacher(request);
-              Provider.of<CourseworkProvider>(context, listen: false).coursework =
-                  Coursework.empty();
+              Provider.of<CourseworkProvider>(context, listen: false)
+                  .coursework = Coursework.empty();
               Navigator.pushNamed(context, "/teacher");
             }
           }

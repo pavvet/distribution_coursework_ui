@@ -43,17 +43,15 @@ class _RegisterPageState extends State<RegisterPage> {
     return AppBar(
         key: _scaffoldKey,
         title: const Center(child: Text("Регистрация пользователя")),
-        leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                  constraints: const BoxConstraints.expand(width: 80, height: 80),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
-                  },
-                  icon: const Icon(Icons.arrow_back));
-            }
-        )
-    );
+        leading: Builder(builder: (BuildContext context) {
+          return IconButton(
+              constraints: const BoxConstraints.expand(width: 80, height: 80),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/auth", (route) => false);
+              },
+              icon: const Icon(Icons.arrow_back));
+        }));
   }
 
   Widget _buildBody() {
@@ -148,8 +146,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               await Provider.of<TeacherProvider>(context,
                                       listen: false)
                                   .saveTeacher(request);
-                              Provider.of<CourseworkProvider>(context, listen: false).coursework =
-                                  Coursework.empty();
+                              Provider.of<CourseworkProvider>(context,
+                                      listen: false)
+                                  .coursework = Coursework.empty();
                               Navigator.pushNamed(context, "/teacher");
                             }
                           }

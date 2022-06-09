@@ -2,8 +2,6 @@ class SaveStudentRequest {
   String name;
   String login;
   String password;
-
-
   SaveStudentRequest(this.name, this.login, this.password);
 
   Map<String, dynamic> toMap() {

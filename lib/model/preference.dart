@@ -1,7 +1,6 @@
 class Preference {
   int? id;
   String? name;
-
   Preference(this.name);
 
   Preference.empty()

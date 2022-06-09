@@ -8,20 +8,17 @@ import 'package:distribution_coursework/screen/student_page.dart';
 import 'package:distribution_coursework/screen/teacher_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'provider/settings_provider.dart';
 import 'screen/distribution_page.dart';
 import 'screen/register_page.dart';
 
 class RootApp extends StatelessWidget {
   const RootApp({Key? key}) : super(key: key);
-
   static const _bluePrimaryValue = -14137996;
-
   static const MaterialColor blue = MaterialColor(
     _bluePrimaryValue,
     <int, Color>{
-      50:  Color(-14137996),
+      50: Color(-14137996),
       100: Color(-14137996),
       200: Color(-14137996),
       300: Color(-14137996),
@@ -52,7 +49,7 @@ class RootApp extends StatelessWidget {
             create: (context) => DistributionProvider()),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: blue,
             elevatedButtonTheme: ElevatedButtonThemeData(

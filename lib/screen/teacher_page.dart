@@ -85,7 +85,8 @@ class _TeacherPageState extends State<TeacherPage> {
             constraints: const BoxConstraints.expand(width: 80, height: 80),
             onPressed: () {
               Provider.of<TeacherProvider>(context, listen: false).exit();
-              Navigator.pushNamedAndRemoveUntil(context, "/auth", (route)=>false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, "/auth", (route) => false);
             },
             icon: const Icon(Icons.arrow_back));
       }),
@@ -197,7 +198,8 @@ class _TeacherPageState extends State<TeacherPage> {
           controller: _descriptionTextController,
           style: const TextStyle(fontSize: 18, overflow: TextOverflow.clip),
           decoration: const InputDecoration(
-              labelText: "Описание курсового проекта", border: InputBorder.none),
+              labelText: "Описание курсового проекта",
+              border: InputBorder.none),
         ),
       ),
     );
@@ -289,8 +291,7 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget _buttonCreateCoursework() {
-    final coursework =
-        Provider.of<CourseworkProvider>(context).coursework;
+    final coursework = Provider.of<CourseworkProvider>(context).coursework;
     return ElevatedButton(
       onPressed: coursework.id != null
           ? null
